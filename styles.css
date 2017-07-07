@@ -14,7 +14,7 @@
 /* ----------------------------------- Buttons -------------------------------- */
 .btn-primary.btn {
 	border: 1px solid #ff5a5f;
-	border-radius: 10px;
+	border-radius: 5px;
 	font-weight: bold;
 	background-color: #ff5a5f;
 	color: #fff;
@@ -22,9 +22,9 @@
 }
 
 .btn-primary.btn:hover, .btn-primary.btn:focus {
-	border-color: #ff7e82;
-	border-bottom-color: #fa0008;
-	background-color: #ff7e82;
+	border-color: #fa0008;
+	/*border-bottom-color: #fa0008;
+	background-color: #ff7e99;*/
 	outline: none;
 }
 
@@ -52,7 +52,6 @@
 
 .sign-up {
   background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
-  background-size: cover;
   min-height: 100vh;
 }
 
@@ -96,4 +95,11 @@ float: right;
 
 .remember {
 float: left;
+}
+
+
+/* -------------------------------- MISC -------------------------------- */
+
+.wide {
+	width: 100%;
 }
