@@ -39,4 +39,61 @@
 	border-radius: 2px;
 	padding: 10px 0;
 	margin-top: 10px;
+	background-color: #f4f4f5;
+}
+
+.btn.btn-default:hover {
+	box-shadow: 0 4px 6px -6px #333;
+}
+
+
+/* -------------------------------- AUTHENTICATION -------------------------------- */
+/* For both sign up and login pages */
+
+.sign-up {
+  background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.sign-up.social-links .btn {
+margin-bottom: 10px;
+}
+
+.sign-up-form {
+background-color: #FFFFFF;
+max-width: 500px;
+margin-left: auto;
+margin-right: auto;
+width: 100%;
+border-radius: 5px;
+position: relative;
+top: 2em;
+}
+
+.sign-up-text {
+	padding: 1.5rem 2rem;
+}
+
+.form-group {
+margin-bottom: 15px;
+}
+
+.form-group label {
+	font-weight: normal;
+}
+
+.form-control {
+	height: 4.0rem;
+	border-radius: 5px;
+}
+
+/* For login only */
+
+.forgot-password a {
+float: right;
+}
+
+.remember {
+float: left;
 }
