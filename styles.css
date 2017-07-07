@@ -1,3 +1,7 @@
+body {
+	background-color: #f4f4f5;
+}
+
 .homepage-img {
   background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
   background-size: cover;
@@ -103,3 +107,18 @@ float: left;
 .wide {
 	width: 100%;
 }
+
+
+/* -------------------------------- BUCKETLIST -------------------------------- */
+
+.new-bucketlist {
+	background: linear-gradient(to top right, #11BDFF 0%, #11BDFF 100%);
+	color: white;
+}
+
+.content {
+	text-align: center;
+	margin-top: 2em;
+	padding-top: 1em;
+}
+
