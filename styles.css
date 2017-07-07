@@ -17,24 +17,26 @@ body {
 
 /* ----------------------------------- Buttons -------------------------------- */
 .btn-primary.btn {
-	border: 1px solid #ff5a5f;
 	border-radius: 5px;
 	font-weight: bold;
-	background-color: #ff5a5f;
+	/*background-color: #ff5a5f;*/
+	/*background-color: #5533FF;*/
+	background-color: #472EDB;
 	color: #fff;
 	padding: 10px 25px 10px 25px;
 }
 
 .btn-primary.btn:hover, .btn-primary.btn:focus {
-	border-color: #fa0008;
+	border-color: #5C0FD1;
+	/*border-color: #fa0008;*/
 	/*border-bottom-color: #fa0008;
 	background-color: #ff7e99;*/
 	outline: none;
 }
 
 .btn-primary.btn:active {
-	border-color: #e00007;
-	background-color: #ff5a5f;
+	border-color: #5C0FD1;
+	background-color: #472EDB;
 	outline: none;
 }
 
@@ -48,6 +50,13 @@ body {
 
 .btn.btn-default:hover {
 	box-shadow: 0 4px 6px -6px #333;
+}
+
+.table-btn {
+	font-weight: normal !important;
+	padding: 5px 25px 5px 25px !important;
+	/*width: 150px;*/
+	height: 34px;
 }
 
 
@@ -111,14 +120,21 @@ float: left;
 
 /* -------------------------------- BUCKETLIST -------------------------------- */
 
-.new-bucketlist {
+.bucketlist {
 	background: linear-gradient(to top right, #11BDFF 0%, #11BDFF 100%);
 	color: white;
 }
 
 .content {
-	text-align: center;
 	margin-top: 2em;
 	padding-top: 1em;
 }
 
+.content h2 {
+	text-align: center;
+}
+
+.table {
+	max-width: 800px;
+	margin-left: 220px;
+}
