@@ -64,23 +64,23 @@ body {
 /* For both sign up and login pages */
 
 .sign-up {
-  background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
-  min-height: 100vh;
+	background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
+	min-height: 100vh;
 }
 
 .sign-up.social-links .btn {
-margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .sign-up-form {
-background-color: #FFFFFF;
-max-width: 500px;
-margin-left: auto;
-margin-right: auto;
-width: 100%;
-border-radius: 5px;
-position: relative;
-top: 2em;
+	background-color: #FFFFFF;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	border-radius: 5px;
+	position: relative;
+	top: 2em;
 }
 
 .sign-up-text {
@@ -88,7 +88,7 @@ top: 2em;
 }
 
 .form-group {
-margin-bottom: 15px;
+	margin-bottom: 15px;
 }
 
 .form-group label {
@@ -103,11 +103,11 @@ margin-bottom: 15px;
 /* For login only */
 
 .forgot-password a {
-float: right;
+	float: right;
 }
 
 .remember {
-float: left;
+	float: left;
 }
 
 
@@ -144,4 +144,8 @@ float: left;
 .content h4 {
 	text-decoration: underline;
 	font-weight: bold;
+}
+
+.modal-content {
+	background: linear-gradient(to top right, #11BDFF 0%, #11BDFF 100%);
 }
