@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Your Bucketlists{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="bucketlist">
+        <div class="content">
+            <h2>Your bucketlists live here</h2>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Bucketlist Title</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hitch Hiking</td>
+                        <td>For all hikes</td>
+                        <td>
+                            <a href="#">
+                                <span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#edit-modal"></span>
+                            </a>&emsp;
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="edit-modal" role="dialog">
+                                <div class="modal-dialog">
+                                
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Edit Bucketlist</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/show_bucketlists" method="POST">
+                                                <div class="row form-group">
+                                                    <div class="col-lg-3">
+                                                        <h4>Title</h4>
+                                                    </div>
+                                                    <div class="col-lg-7">
+                                                        <input autofocus="true" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row form-group">
+                                                    <div class="col-lg-3">
+                                                        <h4>Description</h4>
+                                                    </div>
+                                                    <div class="col-lg-7">
+                                                        <input class="form-control">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <Input type="submit" class="btn btn-default" value="Save">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+                            <a href="#">
+                                <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#delete-modal"></span>
+                            </a>
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="delete-modal" role="dialog">
+                                <div class="modal-dialog">
+                                
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Delete this.blist</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Deleting this bucketlist will also delete its items<p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <Input type="submit" class="btn btn-default" value="Delete">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </td>
+                        <td><a href="show_items.html" class="btn btn-primary table-btn">View Bucketlist</a></td>
+                    </tr>
+                    <tr>
+                        <td>Cycling</td>
+                        <td>For all cycles</td>
+                        <td>
+                            <a href="#">
+                                <span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#edit-modal"></span>
+                            </a>&emsp;
+
+                            <a href="#">
+                                <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#delete-modal"></span>
+                            </a>
+                        </td>
+                        <td><a href="show_items.html" class="btn btn-primary table-btn">View Bucketlist</a></td>
+                    </tr>
+                    </hr>
+                </tbody>
+            </table>
+            
+            <button class="btn btn-primary" data-toggle="modal" data-target="#add-bucketlist-modal">Add new bucketlist</button> </br>
+            <br>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="add-bucketlist-modal" role="dialog">
+                <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add New Bucketlist</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/new_bucketlist" method="POST">
+                                <div class="row form-group">
+                                    <div class="col-lg-3">
+                                        <h4>Title</h4>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input autofocus="true" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-lg-3">
+                                        <h4>Description</h4>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <input class="form-control">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <Input type="submit" class="btn btn-default" value="Save">
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
