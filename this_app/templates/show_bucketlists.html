@@ -6,6 +6,11 @@
     <div class="bucketlist">
         <div class="content">
             <h2>Your bucketlists live here</h2>
+
+            <!-- Display error/success/info messages here -->
+            {% for message in get_flashed_messages() %}
+                {{ message }}
+            {% endfor %}
             
             <table class="table">
                 <thead>
