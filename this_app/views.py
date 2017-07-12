@@ -117,4 +117,11 @@ def show_bucketlists():
 
 @app.route('/show_items')
 def show_items():
-    return render_template("show_items.html")                                                        
+    return render_template("show_items.html")
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+
+    return redirect(url_for('index'))                                                      
