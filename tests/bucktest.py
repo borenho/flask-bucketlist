@@ -1,6 +1,5 @@
 from this_app import app
 from this_app.models import User
-from this_app.views
 import unittest
 
 

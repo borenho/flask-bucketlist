@@ -1,6 +1,5 @@
 from flask import Flask, flash, redirect, render_template, url_for, request, session, Markup
-from this_app import app , login_manager
-from flask_login import login_user, logout_user, login_required, current_user
+from this_app import app
 from .models import User
 from .forms import SignupForm, LoginForm
 
@@ -10,7 +9,6 @@ def index():
 
 
 @app.route('/signup', methods=['GET', 'POST'])
-
 def signup():
     form = SignupForm(request.form)
 
@@ -47,21 +45,6 @@ def signup():
     # If GET
     return render_template("signup.html", form=SignupForm())
 
-@login_manager.user_loader
-def user_loader(user_id):
-    """ Takes the unicode id of the user and returns the user object
-        Given the unicode id, the method returns the user with the given id
-        This is loaded after every request
-    """
-    users_dict = User.users.items()
-    user = {key:value for key, value in users_dict if key == int(user_id)}
-
-    return user
-    # for counter in User.users.keys():
-    #     id = counter
-
-    #     return User.users.get(int(id))
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
@@ -80,7 +63,6 @@ def login():
                 flash(successful_login)
                 
                 # Now log the user in
-                login_user(valid_user, remember=form.remember.data)
                 return redirect(url_for('show_bucketlists'))
 
             # If wrong password
@@ -111,7 +93,6 @@ def login():
     return render_template("login.html", form=form)
 
 @app.route('/show_bucketlists')
-@login_required
 def show_bucketlists():
     return render_template("show_bucketlists.html")
 
@@ -120,8 +101,7 @@ def show_items():
     return render_template("show_items.html")
 
 @app.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    pass
 
-    return redirect(url_for('index'))                                                      
+    return redirect(url_for('/'))                                                      

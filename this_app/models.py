@@ -1,7 +1,6 @@
-from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(UserMixin):
+class User(object):
     """Represents a user who can Create, Read, Update & Delete his own bucketlists"""
 
     counter = 0
@@ -27,24 +26,4 @@ class User(UserMixin):
             }
         })
 
-        return self.users
-
-    @property
-    def is_active(self):
-        """True, as all users are active."""
-        return True
-
-    def get_id(self):
-        """Return the id """
-        users_dict = self.users.items()
-        user = {key:value for key, value in users_dict}
-        return str(user.keys())
-
-    @property
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return True
-
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
+        return self
