@@ -29,14 +29,18 @@ class User(UserMixin):
 
         return self.users
 
+    @property
     def is_active(self):
         """True, as all users are active."""
         return True
 
     def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
+        """Return the id """
+        users_dict = self.users.items()
+        user = {key:value for key, value in users_dict}
+        return str(user.keys())
 
+    @property
     def is_authenticated(self):
         """Return True if the user is authenticated."""
         return True
