@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email
 
 
@@ -15,3 +15,8 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email(message="Invalid email format"), Length(max=32)])
     password = PasswordField("Password", validators=[DataRequired(), Length(4, 32)])
     remember = BooleanField("Remember Me")
+
+class BucketlistForm(FlaskForm):
+    """Form to CRUd a bucketlist"""
+    name = StringField("Name", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[DataRequired()])

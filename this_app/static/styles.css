@@ -1,11 +1,6 @@
 body {
-	background-color: #f4f4f5;
-}
-
-.homepage-img {
-  background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
-  background-size: cover;
-  min-height: 100vh;
+	background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
+  	min-height: 100vh;
 }
 
 .get-started {
@@ -19,8 +14,6 @@ body {
 .btn-primary.btn {
 	border-radius: 5px;
 	font-weight: bold;
-	/*background-color: #ff5a5f;*/
-	/*background-color: #5533FF;*/
 	background-color: #472EDB;
 	color: #fff;
 	padding: 10px 25px 10px 25px;
@@ -28,9 +21,6 @@ body {
 
 .btn-primary.btn:hover, .btn-primary.btn:focus {
 	border-color: #5C0FD1;
-	/*border-color: #fa0008;*/
-	/*border-bottom-color: #fa0008;
-	background-color: #ff7e99;*/
 	outline: none;
 }
 
@@ -55,18 +45,12 @@ body {
 .table-btn {
 	font-weight: normal !important;
 	padding: 5px 25px 5px 25px !important;
-	/*width: 150px;*/
 	height: 34px;
 }
 
 
 /* -------------------------------- AUTHENTICATION -------------------------------- */
 /* For both sign up and login pages */
-
-.sign-up {
-	background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%);
-	min-height: 100vh;
-}
 
 .sign-up.social-links .btn {
 	margin-bottom: 10px;
@@ -121,14 +105,14 @@ body {
 /* -------------------------------- BUCKETLIST -------------------------------- */
 
 .bucketlist {
-	background: linear-gradient(to top right, #11BDFF 0%, #11BDFF 100%);
-	color: white;
+	color: black;
 }
 
 .content {
 	margin-top: 2em;
 	padding-top: 1em;
 	text-align: center;
+	background-color: white;
 }
 
 .table {
@@ -137,15 +121,7 @@ body {
 	text-align: left;
 }
 
-.table a {
-	color: white;
-}
-
 .content h4 {
 	text-decoration: underline;
 	font-weight: bold;
-}
-
-.modal-content {
-	background: linear-gradient(to top right, #11BDFF 0%, #11BDFF 100%);
 }
