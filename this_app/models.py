@@ -2,8 +2,8 @@ class User(object):
     """Represents a user who can Create, Read, Update & Delete his own bucketlists"""
 
     user_id = 0
-    users = {}
-    user_bucketlists = {}
+    users = []
+    user_bucketlists = []
 
     def __init__(self, email, username, password):
         """Constructor to initialize class"""
@@ -17,7 +17,7 @@ class User(object):
     def create_user(self):
         """ Class to create and store a user object """
 
-        self.users.update({
+        self.users.append({
             self.user_id: {
                 'email': self.email,
                 'username': self.username,
@@ -32,8 +32,8 @@ class Bucketlist(object):
     """Represents a class to Create, Read, Update & Delete a bucketlist"""
 
     buck_id = 0
-    bucketlists = {}
-    bucketlist_items = {}
+    bucketlists = []
+    bucketlist_items = []
 
     def __init__(self, name, description):
         """Constructor to initialize class"""
@@ -46,7 +46,7 @@ class Bucketlist(object):
     def create_bucketlist(self):
         """ Class to create and store a bucketlist object """
 
-        Bucketlist.bucketlists.update({
+        Bucketlist.bucketlists.append({
             Bucketlist.buck_id: {
                 'name': self.name,
                 'description': self.description
@@ -57,7 +57,7 @@ class Bucketlist(object):
 
     def insert_into_user(self):
         """ Give the created bucketlist to its owner """
-        User.user_bucketlists.update({
+        User.user_bucketlists.append({
             User.user_id: Bucketlist.bucketlists
         })
 
@@ -66,7 +66,7 @@ class BucketlistItem(object):
     """Represents a class to Create, Read, Update & Delete bucketlist items"""
 
     item_id = 0
-    bucketlist_items = {}
+    bucketlist_items = []
 
     def __init__(self, title, description, status):
         """Constructor to initialize class"""
@@ -80,7 +80,7 @@ class BucketlistItem(object):
     def create_bucketlist_item(self):
         """ Class to create and store a bucketlist item """
 
-        self.bucketlist_items.update({
+        self.bucketlist_items.append({
             BucketlistItem.item_id: {
                 'title': self.title,
                 'description': self.description,
@@ -92,6 +92,6 @@ class BucketlistItem(object):
 
     def insert_into_bucketlist(self):
         """ Give the created bucketlist item to its bucketlist """
-        Bucketlist.bucketlist_items.update({
+        Bucketlist.bucketlist_items.append({
             Bucketlist.buck_id: BucketlistItem.bucketlist_items
         })

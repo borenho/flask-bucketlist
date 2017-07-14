@@ -125,3 +125,7 @@ body {
 	text-decoration: underline;
 	font-weight: bold;
 }
+
+.error-msg-width {
+	width: 70px !important;
+}

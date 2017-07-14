@@ -7,6 +7,13 @@
         <div class="content">
             <h2>Your bucketlist in detail</h2></br>
             
+            <!-- Display error/success/info messages here -->
+            <!-- <div class="error-msg-width"> -->
+                {% for message in get_flashed_messages() %}
+                    {{ message }}
+                {% endfor %}
+            <!-- </div> -->
+            
             <h4>Hitch Hiking (2 items)</h4>
             <table class="table">
                 <thead>
