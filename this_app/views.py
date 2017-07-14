@@ -54,31 +54,30 @@ def login():
 
     if form.validate_on_submit():
         # Iterate over each user's stored data
-        users_list = User.users    # Eg [{1: {'password': 'kaka', 'username': 'kaka', 'email': 'kaka@email.com'}}]
-        for single_user in users_list:
-            existing_user = [v for v in single_user.values() if form.email.data in v['email']]
-            # Check password if user exists
-            if existing_user:
-                # Check if the stored password and form password match
-                valid_user = [v for v in existing_user if v['password']==form.password.data]
-                if valid_user:
-                    successful_login = Markup("<div class='alert alert-success' role='alert'>\
-                                                Login successful\
-                                                </div>")
-                    flash(successful_login)
-                    
-                    # Now log the user in
-                    
-
-                    return redirect(url_for('show_bucketlists', form=BucketlistForm()))
-
-                # If wrong password
-                incorrect_password = Markup("<div class='alert alert-danger' role='alert'>\
-                                            Incorrect password. Please use the correct password\
+        users_dict = User.users.items()    # Eg {{1: {'password': 'kaka', 'username': 'kaka', 'email': 'kaka@email.com'}}}
+        existing_user = {k:v for k, v in users_dict if form.email.data in v['email']}
+        # Check password if user exists
+        if existing_user:
+            # Check if the stored password and form password match
+            valid_user = [v for v in existing_user.values() if v['password']==form.password.data]
+            if valid_user:
+                successful_login = Markup("<div class='alert alert-success' role='alert'>\
+                                            Login successful\
                                             </div>")
-                flash(incorrect_password)
+                flash(successful_login)
+                
+                # Now log the user in
+                
 
-            return redirect(url_for("login", form=form))
+                return redirect(url_for('show_bucketlists', form=BucketlistForm()))
+
+            # If wrong password
+            incorrect_password = Markup("<div class='alert alert-danger' role='alert'>\
+                                        Incorrect password. Please use the correct password\
+                                        </div>")
+            flash(incorrect_password)
+
+        return redirect(url_for("login", form=form))
 
         # If email is not registered yet
         not_registered = Markup("<div class='alert alert-info' role='alert'>\
@@ -113,11 +112,14 @@ def show_bucketlists():
                             Bucketlist created successfully\
                             </div>")
         flash(bucketlist_created)
+
         print(Bucketlist.bucketlists)
         print("-------------------")
         print(User.user_bucketlists)
 
-        return redirect(url_for('show_bucketlists', form=form))
+        data = User.user_bucketlists
+
+        return redirect(url_for('show_bucketlists', form=form, data=data))
 
     if form.errors:
         form_error = Markup("<div class='alert alert-danger' role='alert'>\
