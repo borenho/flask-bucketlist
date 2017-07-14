@@ -1,7 +1,7 @@
 from flask import flash, redirect, render_template, url_for, request, session, Markup
 from this_app import app
-from .models import User, Bucketlist
-from .forms import SignupForm, LoginForm, BucketlistForm
+from .models import User, Bucketlist, BucketlistItem
+from .forms import SignupForm, LoginForm, BucketlistForm, BucketlistItemForm
 
 # session['logged_in'] is False
 
@@ -46,7 +46,7 @@ def signup():
         flash(form_error)
 
     # If GET
-    return render_template("signup.html", form=SignupForm())
+    return render_template("signup.html", form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -76,7 +76,7 @@ def login():
                                         </div>")
             flash(incorrect_password)
 
-            return redirect(url_for("login", form=LoginForm()))
+            return redirect(url_for("login", form=form))
 
         # If email is not registered yet
         not_registered = Markup("<div class='alert alert-info' role='alert'>\
@@ -124,11 +124,36 @@ def show_bucketlists():
         flash(form_error)
 
     # If GET
-    return render_template("show_bucketlists.html", form=BucketlistForm())
+    return render_template("show_bucketlists.html", form=form)
 
 @app.route('/show_items')
 def show_items():
-    return render_template("show_items.html")
+    form = BucketlistItemForm(request.form)
+
+    if form.validate_on_submit():
+        # Create the bucketlist
+        new_bucketlist_item = BucketlistItem(form.title.data, form.description.data, form.status.data)
+        new_bucketlist_item.create_bucketlist_item()
+        new_bucketlist_item.insert_into_bucketlist()
+
+        bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
+                            Bucketlist created successfully\
+                            </div>")
+        flash(bucketlist_created)
+        print(BucketlistItem.bucketlist_items)
+        print("-------------------")
+        print(User.user_bucketlists)
+
+        return redirect(url_for('show_items', form=form))
+
+    if form.errors:
+        form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                            Form error. Could not create bucketlist *#*#*??\
+                            </div>")
+        flash(form_error)
+
+    # If GET
+    return render_template("show_bucketlists.html", form=form)
 
 @app.route('/logout')
 def logout():

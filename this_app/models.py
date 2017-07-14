@@ -77,7 +77,7 @@ class BucketlistItem(object):
         self.status = status
 
 
-    def create_bucketlist_items(self):
+    def create_bucketlist_item(self):
         """ Class to create and store a bucketlist item """
 
         self.bucketlist_items.update({
