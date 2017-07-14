@@ -105,13 +105,15 @@ def show_bucketlists():
         # Create the bucketlist
         new_bucketlist = Bucketlist(form.name.data, form.description.data)
         new_bucketlist.create_bucketlist()
+        new_bucketlist.insert_into_user()
 
         bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
                             Bucketlist created successfully\
                             </div>")
         flash(bucketlist_created)
-
         print(Bucketlist.bucketlists)
+        print("-------------------")
+        print(User.user_bucketlists)
 
         return redirect(url_for('show_bucketlists', form=form))
 
