@@ -118,8 +118,8 @@ def show_bucketlists():
         print(User.user_bucketlists)
 
         data = User.user_bucketlists
-
-        return redirect(url_for('show_bucketlists', form=form, data=data))
+        
+        return render_template("show_bucketlists.html", form=form, data=data)
 
     if form.errors:
         form_error = Markup("<div class='alert alert-danger' role='alert'>\
