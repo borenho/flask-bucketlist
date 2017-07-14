@@ -44,7 +44,7 @@ class Bucketlist(object):
 
 
     def create_bucketlist(self):
-        """ Class to create and store a user object """
+        """ Class to create and store a bucketlist object """
 
         self.bucketlists.update({
             self.counter: {
@@ -54,3 +54,7 @@ class Bucketlist(object):
         })
 
         return self
+
+    def insert_into_user(self):
+        """ Give the created bucketlist to its owner """
+        pass
