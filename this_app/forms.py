@@ -16,7 +16,15 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired(), Length(4, 32)])
     remember = BooleanField("Remember Me")
 
+
 class BucketlistForm(FlaskForm):
     """Form to CRUd a bucketlist"""
     name = StringField("Name", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
+
+
+class BucketlistItemForm(FlaskForm):
+    """Form to CRUd a bucketlist item"""
+    title = StringField("Title", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[DataRequired()])
+    status = BooleanField("Status", validators=[DataRequired])
