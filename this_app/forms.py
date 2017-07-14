@@ -27,4 +27,4 @@ class BucketlistItemForm(FlaskForm):
     """Form to CRUd a bucketlist item"""
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
-    status = BooleanField("Status", validators=[DataRequired])
+    status = BooleanField("Status")

@@ -126,7 +126,7 @@ def show_bucketlists():
     # If GET
     return render_template("show_bucketlists.html", form=form)
 
-@app.route('/show_items')
+@app.route('/show_items', methods=['GET', 'POST'])
 def show_items():
     form = BucketlistItemForm(request.form)
 
@@ -137,12 +137,12 @@ def show_items():
         new_bucketlist_item.insert_into_bucketlist()
 
         bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
-                            Bucketlist created successfully\
+                            Bucketlist Item created successfully\
                             </div>")
         flash(bucketlist_created)
         print(BucketlistItem.bucketlist_items)
         print("-------------------")
-        print(User.user_bucketlists)
+        print(Bucketlist.bucketlist_items)
 
         return redirect(url_for('show_items', form=form))
 
@@ -153,7 +153,7 @@ def show_items():
         flash(form_error)
 
     # If GET
-    return render_template("show_bucketlists.html", form=form)
+    return render_template("show_items.html", form=form)
 
 @app.route('/logout')
 def logout():

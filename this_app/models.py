@@ -68,11 +68,11 @@ class BucketlistItem(object):
     item_id = 0
     bucketlist_items = {}
 
-    def __init__(self, title, description, status=True):
+    def __init__(self, title, description, status):
         """Constructor to initialize class"""
 
         BucketlistItem.item_id += 1
-        self.name = title
+        self.title = title
         self.description = description
         self.status = status
 
@@ -81,8 +81,8 @@ class BucketlistItem(object):
         """ Class to create and store a bucketlist item """
 
         self.bucketlist_items.update({
-            self.item_id: {
-                'name': self.name,
+            BucketlistItem.item_id: {
+                'title': self.title,
                 'description': self.description,
                 'status': self.status
             }
@@ -93,5 +93,5 @@ class BucketlistItem(object):
     def insert_into_bucketlist(self):
         """ Give the created bucketlist item to its bucketlist """
         Bucketlist.bucketlist_items.update({
-            User.user_id: BucketlistItem.bucketlist_items
+            Bucketlist.buck_id: BucketlistItem.bucketlist_items
         })
