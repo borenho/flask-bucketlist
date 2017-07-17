@@ -190,6 +190,7 @@ def show_items():
 
 @app.route('/logout')
 def logout():
-    pass
+    global logged_in
+    logged_in = False
 
-    return redirect(url_for('/'))                                                      
+    return redirect(url_for('index'))                                                      
