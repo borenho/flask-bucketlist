@@ -73,17 +73,23 @@ def login():
         if existing_user:
             # Check if the stored password and form password match
             valid_user = [v for v in existing_user.values() if v['password']==form.password.data]
-            if valid_user:
+            if valid_user:  
+                # Log the user in as credentials are valid
+                global logged_in
+                logged_in = True
+
+                this_user_id = [i for i in existing_user]    # gets id, eg 2
+
+                print (existing_user)
+                print ("---------------")
+                print (valid_user)
+
                 successful_login = Markup("<div class='alert alert-success' role='alert'>\
                                                 Login successful\
                                             </div>")
                 flash(successful_login)
-                
-                # Now log the user in
-                global logged_in
-                logged_in = True
-
-                return redirect(url_for('show_bucketlists', form=BucketlistForm()))
+              
+                return redirect(url_for('show_bucketlists', form=BucketlistForm(), user_id=this_user_id))
 
             # If wrong password
             incorrect_password = Markup("<div class='alert alert-danger' role='alert'>\
@@ -115,6 +121,9 @@ def login():
 @app.route('/show_bucketlists', methods=['GET', 'POST'])
 def show_bucketlists():
     if logged_in:
+        # Check if user has bucketlists
+        bucketlist_dict = User.user_bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
+        # If user has no bucketlists
         form = BucketlistForm(request.form)
 
         if form.validate_on_submit():
