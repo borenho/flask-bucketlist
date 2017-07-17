@@ -15,7 +15,7 @@
 
             {% if data %}
 
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><a href="{{ url_for('show_items') }}" class="btn btn-primary table-btn">View Bucketlist</a></td>       
+                                    <td><a href="{{ url_for('show_items') }}">Show Items</a></td>       
                                 </tr>
                             {% endfor %}
                         {% endfor %}
