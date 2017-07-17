@@ -4,6 +4,14 @@
 
 <div class="container">
     <div class="bucketlist">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation"><a href="/">Home</a></li>
+                <li role="presentation"><a href="{{ url_for('show_bucketlists') }}">Bucket-lists</a></li>
+                <li role="presentation"><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+        
         <div class="content">
             <h2>Your bucketlist in detail</h2></br>
             
