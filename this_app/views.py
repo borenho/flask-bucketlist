@@ -99,9 +99,18 @@ def login():
                     if form.email.data in value['email']:
                         session['user_id'] = key
                         print ('Login session - ', session['user_id'])
-            
-                        return redirect(url_for('show_bucketlists', form=BucketlistForm()))
 
+                        bucketlist_dict = Bucketlist.bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
+                        has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
+                        print ('Login bucks - ', has_bucks)
+    
+                        # If this user has bucketlists
+                        if has_bucks:
+                            return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
+
+                        # If user has no bucketlists
+                        print ('has no bucks')
+                        return redirect(url_for('show_bucketlists', form=BucketlistForm()))
             # If wrong password
             incorrect_password = Markup("<div class='alert alert-danger' role='alert'>\
                                             Incorrect password. Please use the correct password\
@@ -164,12 +173,12 @@ def show_bucketlists():
             flash(bucketlist_created)
 
             bucketlist_dict = Bucketlist.bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
-            created_buck = {k:v for k, v in bucketlist_dict if session['user_id']}
-            print ('Existing user bucks - ', User.user_bucketlists)
+            created_buck = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
+            
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
             print ('Created bucks - ', created_buck)
 
-            return render_template("show_bucketlists.html", form=form, data=Bucketlist.bucketlists)
+            return render_template("show_bucketlists.html", form=form, data=created_buck)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
