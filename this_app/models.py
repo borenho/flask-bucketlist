@@ -27,7 +27,7 @@ class User(object):
             }
         })
 
-        return self
+        return self.users
 
 
 class Bucketlist(object):
@@ -48,20 +48,22 @@ class Bucketlist(object):
     def create_bucketlist(self):
         """ Class to create and store a bucketlist object """
 
-        Bucketlist.bucketlists.update({
-            Bucketlist.buck_id: {
-                'name': self.name,
-                'description': self.description
-            }
+        self.bucketlists.update({
+            self.buck_id: {'user_id': User.user_id, 'name': self.name, 'description': self.description}
         })
+
+        return self.bucketlists
         
-        return self
 
     def insert_into_user(self):
         """ Give the created bucketlist to its owner """
-        User.user_bucketlists.update({
-            User.user_id: Bucketlist.bucketlists
-        })
+        # User.user_bucketlists.update({
+        #     User.user_id: self.bucketlists
+        # })
+
+        User.user_bucketlists[User.user_id] = self.bucketlists
+
+        return User.user_bucketlists
 
 
 class BucketlistItem(object):
