@@ -1,6 +1,5 @@
 from this_app import app
 from this_app.models import User, Bucketlist, BucketlistItem
-from werkzeug.security import generate_password_hash, check_password_hash
 import unittest
 
 
@@ -26,10 +25,9 @@ class UserTestCase(unittest.TestCase):
         self.user.users = {}
         result = self.user.create_user()
         for k, v in self.user.users.items():
-            for m in v.values():
-                stored_password = m['password']
-                expected = {1: {'email': 'leo@email.com', 'username': 'leo', 'password': check_password_hash(stored_password, 'pwd')}}
-                self.assertEqual(expected, result)
+            stored_password = v['password']
+            expected = {2: {'email': 'leo@email.com', 'username': 'leo', 'password': stored_password}}
+            self.assertEqual(expected, result)
 
     def test_successful_login(self):
         """Test registered user can login successfully"""
@@ -47,13 +45,12 @@ class BucketlistTestCase(unittest.TestCase):
         """Test bucketlist creation without a new user fails"""
         User.users = {}
         result = self.bucketlist.create_bucketlist()
-        result.insert_into_user()
-        expected = {1: {1: {'name': 'Hiking', 'description': 'Go for hiking'}}}
+        expected = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
         self.assertNotEqual(expected, result)
 
     def test_successful_bucketlist_creation(self):
         """Test bucketlist creation is successful"""
         self.bucketlist.bucketlists = {}
         result = self.bucketlist.create_bucketlist()
-        expected = {1: {'name': 'Hiking', 'description': 'Go for hiking'}}
+        expected = {2: {'user_id': 2, 'name': 'Hiking', 'description': 'Go for hiking'}}
         self.assertEqual(expected, result)
