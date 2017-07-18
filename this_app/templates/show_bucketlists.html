@@ -33,10 +33,10 @@
                     </thead>
                     <tbody>
                         {% for k, e in data.items() %}
-                            {% for u, s in e.items() %}
+                            <!-- {% for u, s in e.items() %} -->
                                 <tr>
-                                    <td>{{ s['name'] }}</td>
-                                    <td>{{ s['description'] }}</td>
+                                    <td>{{ e['name'] }}</td>
+                                    <td>{{ e['description'] }}</td>
                                     <td>
 
                                         <!-- Edit Modal -->
@@ -110,7 +110,7 @@
                                     </td>
                                     <td><a href="{{ url_for('show_items') }}">Show Items</a></td>       
                                 </tr>
-                            {% endfor %}
+                            <!-- {% endfor %} -->
                         {% endfor %}
                     </tbody>
                 </table>

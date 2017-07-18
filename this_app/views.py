@@ -169,7 +169,7 @@ def show_bucketlists():
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
             print ('Created bucks - ', created_buck)
 
-            return render_template("show_bucketlists.html", form=form, data=created_buck)
+            return render_template("show_bucketlists.html", form=form, data=Bucketlist.bucketlists)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
