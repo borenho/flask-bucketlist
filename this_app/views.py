@@ -95,12 +95,12 @@ def login():
                                             </div>")
                 flash(successful_login)
 
-                for key, value in users_dict:     # gets id, eg 2
+                for key, value in users_dict:
                     if form.email.data in value['email']:
                         session['user_id'] = key
                         print ('Login session - ', session['user_id'])
 
-                        bucketlist_dict = Bucketlist.bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
+                        bucketlist_dict = Bucketlist.bucketlists.items()
                         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
                         print ('Login bucks - ', has_bucks)
     
@@ -143,22 +143,15 @@ def show_bucketlists():
     if logged_in:
         form = BucketlistForm(request.form)
 
-        print ('User buck session ID - ', session['user_id'])
+        print ('Show bucks - ', session['user_id'])
 
-        bucketlist_dict = User.user_bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
-        this_user_bucketlists = {k:v for k, v in bucketlist_dict if session['user_id']}
-    
+        bucketlist_dict = Bucketlist.bucketlists.items()
+        has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_bucks)
+
         # If this user has bucketlists
-        # if this_user_bucketlists:
-
-        #     bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
-        #                                     Nice! You have bucketlists created\
-        #                                 </div>")
-        #     flash(bucketlist_created)
-
-        #     print ('This user bucks - ', this_user_bucketlists)
-
-        #     return render_template("show_bucketlists.html", form=form, data=this_user_bucketlists)
+        if has_bucks:
+            return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
 
         # If user has no bucketlists
         if form.validate_on_submit():
@@ -174,7 +167,7 @@ def show_bucketlists():
 
             bucketlist_dict = Bucketlist.bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
             created_buck = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
-            
+
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
             print ('Created bucks - ', created_buck)
 
