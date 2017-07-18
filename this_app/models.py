@@ -5,7 +5,6 @@ class User(object):
 
     user_id = 0
     users = {}
-    user_bucketlists = {}
 
     def __init__(self, email, username, password):
         """Constructor to initialize class"""
@@ -35,7 +34,6 @@ class Bucketlist(object):
 
     buck_id = 0
     bucketlists = {}
-    bucketlist_items = {}
 
     def __init__(self, name, description):
         """Constructor to initialize class"""
@@ -55,15 +53,19 @@ class Bucketlist(object):
         return self.bucketlists
         
 
-    def insert_into_user(self):
-        """ Give the created bucketlist to its owner """
-        # User.user_bucketlists.update({
-        #     User.user_id: self.bucketlists
-        # })
+    def add_bucketlist(self):
+        """ Add bucketlist to a list with an existing bucketlist """
+        # First get the user id from existing bucketlist
+        bucketlist_dict = Bucketlist.bucketlists.items()
+        for k, v in bucketlist_dict:
+            existing_owner = v['user_id']
 
-        User.user_bucketlists[User.user_id] = self.bucketlists
+        self.bucketlists.update({
+            self.buck_id: {'user_id': existing_owner, 'name': self.name, 'description': self.description}
+        })
 
-        return User.user_bucketlists
+        return self.bucketlists
+        
 
 
 class BucketlistItem(object):
@@ -80,22 +82,16 @@ class BucketlistItem(object):
         self.description = description
         self.status = status
 
-
     def create_bucketlist_item(self):
         """ Class to create and store a bucketlist item """
 
         self.bucketlist_items.update({
-            BucketlistItem.item_id: {
+            self.item_id: {
+                'bucketlist_id': Bucketlist.buck_id,
                 'title': self.title,
                 'description': self.description,
                 'status': self.status
             }
         })
         
-        return self
-
-    def insert_into_bucketlist(self):
-        """ Give the created bucketlist item to its bucketlist """
-        Bucketlist.bucketlist_items.update({
-            Bucketlist.buck_id: BucketlistItem.bucketlist_items
-        })
+        return self.bucketlist_items
