@@ -1,3 +1,5 @@
+from werkzeug.security import generate_password_hash
+
 class User(object):
     """Represents a user who can Create, Read, Update & Delete his own bucketlists"""
 
@@ -11,7 +13,7 @@ class User(object):
         User.user_id += 1    # This line is a game changer
         self.email = email
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password)
 
 
     def create_user(self):

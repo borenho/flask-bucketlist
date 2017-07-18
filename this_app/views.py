@@ -1,6 +1,7 @@
 from flask import flash, redirect, render_template, url_for, request, session, Markup
 from this_app import app
 from .models import User, Bucketlist, BucketlistItem
+from werkzeug.security import check_password_hash
 from .forms import SignupForm, LoginForm, BucketlistForm, BucketlistItemForm
 
 # Set var to check if user is logged in
@@ -72,7 +73,8 @@ def login():
         # Check password if user exists
         if existing_user:
             # Check if the stored password and form password match
-            valid_user = [v for v in existing_user.values() if v['password']==form.password.data]
+            # valid_user = [v for v in existing_user.values() if v['password']==form.password.data]
+            valid_user = [v for v in existing_user.values() if check_password_hash(v['password'], form.password.data)]
             if valid_user:  
                 # Log the user in as credentials are valid
                 global logged_in
