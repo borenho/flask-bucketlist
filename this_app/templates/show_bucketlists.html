@@ -82,7 +82,7 @@
                                         </div>
 
                                         <!-- Delete Modal -->
-                                        <a href="#">
+                                        <a href="#" data-href="{{url_for('delete_bucketlist')}}">
                                             <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#delete-modal"></span>
                                         </a>
 
@@ -100,7 +100,9 @@
                                                         <p>Deleting this bucketlist will also delete its items<p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <Input type="submit" class="btn btn-default" value="Delete">
+                                                        <a href="{{url_for('delete_bucketlist')}}">
+                                                            <Input type="submit" class="btn btn-default" value="Delete">
+                                                        </a>
                                                     </div>
                                                 </div>
                                             

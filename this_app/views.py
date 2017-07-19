@@ -175,12 +175,17 @@ def show_bucketlists():
             flash(bucketlist_created)
 
             bucketlist_dict = Bucketlist.bucketlists.items()    # Eg {user_id: {buck_id: {'buck_name': 'Hiking', ...}}}
-            created_buck = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
+            user_bucketlists = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
+            for item in user_bucketlists:
+                if item == len(user_bucketlists):    # item here returns the key
+                    session['bucketlist_id'] = item
+                    print ('session Buck id', - session['bucketlist_id'])
+
 
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
-            print ('Created bucks - ', created_buck)
+            print ('Users bucks - ', user_bucketlists)
 
-            return render_template("show_bucketlists.html", form=form, data=created_buck)
+            return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -263,7 +268,11 @@ def dashboard_bucketlists():
 
         # Show user has bucketlists  --> makes show bucks link in nav work
         if has_bucks:
-            return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
+            return render_template('show_bucketlists.html', form=form, data=has_bucks)
+
+
+        # If no bucketlists exist
+        return redirect(url_for('show_bucketlists', form=form))
 
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
@@ -295,6 +304,23 @@ def dashboard_activities():
     flash(sign_in_first)
 
     return render_template("login.html", form=LoginForm())
+
+@app.route('/delete_bucketlist', methods=['GET', 'POST'])
+def delete_bucketlist():
+    if logged_in:
+        bucketlist_dict = Bucketlist.bucketlists
+        # bucketlist = {k:v for k, v in bucketlist_dict if session['bucketlist_id']==k}
+
+        print ('Existing bucks in lst - ', Bucketlist.bucketlists)
+        # print ('To be del - ', bucketlist)
+
+        for key in bucketlist_dict:
+            if session['bucketlist_id']==key:
+                del bucketlist_dict[key]
+
+                print ('All dicts Should be empty - ', Bucketlist.bucketlists)
+
+                return redirect(url_for("dashboard_bucketlists"))
 
 @app.route('/logout')
 def logout():
