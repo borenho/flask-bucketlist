@@ -23,7 +23,7 @@ class BucketlistForm(FlaskForm):
     description = TextAreaField("Description", validators=[DataRequired()])
 
 
-class BucketlistItemForm(FlaskForm):
+class ActivityForm(FlaskForm):
     """Form to CRUd a bucketlist item"""
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[DataRequired()])
