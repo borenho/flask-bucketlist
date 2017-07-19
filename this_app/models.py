@@ -68,16 +68,16 @@ class Bucketlist(object):
         
 
 
-class BucketlistItem(object):
+class Activity(object):
     """Represents a class to Create, Read, Update & Delete bucketlist items"""
 
-    item_id = 0
-    bucketlist_items = {}
+    activity_id = 0
+    activities = {}
 
     def __init__(self, title, description, status):
         """Constructor to initialize class"""
 
-        BucketlistItem.item_id += 1
+        Activity.activity_id += 1
         self.title = title
         self.description = description
         self.status = status
@@ -85,8 +85,8 @@ class BucketlistItem(object):
     def create_bucketlist_item(self):
         """ Class to create and store a bucketlist item """
 
-        self.bucketlist_items.update({
-            self.item_id: {
+        self.activities.update({
+            self.activity_id: {
                 'bucketlist_id': Bucketlist.buck_id,
                 'title': self.title,
                 'description': self.description,
@@ -94,4 +94,4 @@ class BucketlistItem(object):
             }
         })
         
-        return self.bucketlist_items
+        return self.activities
