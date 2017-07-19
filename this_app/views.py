@@ -176,16 +176,16 @@ def show_bucketlists():
 
             bucketlist_dict = Bucketlist.bucketlists.items()
             user_bucketlists = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
-            for item in user_bucketlists:
-                if item == len(user_bucketlists):    # item here returns the key, which is the bucketslist id
-                    session['bucketlist_id'] = item
-                    print ('session Buck id - ', session['bucketlist_id'])
-
 
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
             print ('Users bucks - ', user_bucketlists)
 
-            return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
+            for item in user_bucketlists:
+                session['bucketlist_id'] = item    # item here returns the key, which is the bucketslist id
+
+                print ('session Buck id - ', session['bucketlist_id'])
+
+                return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -269,7 +269,8 @@ def dashboard_bucketlists():
 
         bucketlist_dict = Bucketlist.bucketlists.items()
         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
-        print ('Login bucks - ', has_bucks)
+
+        print ('Dashboard bucks - ', has_bucks)
 
         # Show user has bucketlists  --> makes show bucks link in nav work
         if has_bucks:
@@ -292,15 +293,16 @@ def dashboard_activities():
     if logged_in:
         form = ActivityForm(request.form)
 
-        print ('Show activity - ', session['user_id'])
+        print ('Show buck id - ', session['bucketlist_id'])
 
         activity_dict = Activity.activities.items()
-        bucket_activities = {k:v for k, v in activity_dict if session['bucketlist_id']==v['bucketlist_id']}
-        print ('Login bucks - ', bucket_activities)
+        bucket_activities = {k:v for k, v in activity_dict if session['bucketlist_id'] in v.values()}
 
-        # Show user has bucketlist items  --> makes show items link in nav work
+        print ('Dashboard activities - ', bucket_activities)
+
+        # Show bucket activities  --> makes show items link in nav work
         if bucket_activities:
-            return render_template('show_activities.html', form=ActivityForm(), data=bucket_activities)
+            return render_template('show_activities.html', form=form, data=bucket_activities)
 
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
@@ -338,7 +340,7 @@ def delete_activity():
 
                 print ('Activity should now be empty - ', Activity.activities)
 
-                return redirect(url_for("show_activities", data=activity_dict))
+                return redirect(url_for("dashboard_activities"))
 
 @app.route('/edit_bucketlist', methods=['GET', 'POST'])
 def edit_bucketlist():
