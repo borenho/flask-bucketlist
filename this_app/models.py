@@ -82,7 +82,7 @@ class Activity(object):
         self.description = description
         self.status = status
 
-    def create_bucketlist_item(self):
+    def create_activity(self):
         """ Class to create and store a bucketlist item """
 
         self.activities.update({

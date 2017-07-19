@@ -1,8 +1,8 @@
 from flask import flash, redirect, render_template, url_for, request, session, Markup
 from this_app import app
-from .models import User, Bucketlist, BucketlistItem
+from .models import User, Bucketlist, Activity
 from werkzeug.security import check_password_hash
-from .forms import SignupForm, LoginForm, BucketlistForm, BucketlistItemForm
+from .forms import SignupForm, LoginForm, BucketlistForm, ActivityForm
 
 # Set var to check if user is logged in
 global logged_in
@@ -208,42 +208,42 @@ def show_bucketlists():
     return render_template("login.html", form=LoginForm())
 
 @app.route('/show_items', methods=['GET', 'POST'])
-def show_items():
+def show_activities():
     if logged_in:
-        form = BucketlistItemForm(request.form)
+        form = ActivityForm(request.form)
 
-        print ('Show item - ', session['user_id'])
+        print ('Show activity - ', session['user_id'])
 
-        item_dict = BucketlistItem.bucketlist_items.items()
-        has_items = {k:v for k, v in item_dict if session['user_id'] in v.values()}
-        print ('Login bucks - ', has_items)
+        activity_dict = Activity.activities.items()
+        has_activitys = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_activitys)
 
         # Show user has bucketlist items  --> makes show items link in nav work
-        if has_items:
-            return render_template('show_items.html', form=BucketlistItemForm(), data=has_items)
+        if has_activitys:
+            return render_template('show_items.html', form=ActivityForm(), data=has_activitys)
 
         # If user has no items
         if form.validate_on_submit():
             # Create the bucketlist
-            new_bucketlist_item = BucketlistItem(form.title.data, form.description.data, form.status.data)
-            new_bucketlist_item.create_bucketlist_item()
+            new_activity = Activity(form.title.data, form.description.data, form.status.data)
+            new_activity.create_activity()
 
-            bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
-                                            Bucketlist Item created successfully\
+            activity_created = Markup("<div class='alert alert-success' role='alert'>\
+                                            Bucketlist activity created successfully\
                                         </div>")
-            flash(bucketlist_created)
+            flash(activity_created)
             
-            item_dict = BucketlistItem.bucketlist_items.items()
-            created_items = {k:v for k, v in item_dict if session['user_id']==v['user_id']}
+            activity_dict = Activity.activities.items()
+            created_activities = {k:v for k, v in activity_dict} # if session['user_id']==v['user_id']}
 
-            print ('Existing items in lst - ', BucketlistItem.bucketlist_items)
-            print ('Created items - ', created_items)
+            print ('Existing items in lst - ', Activity.activities)
+            print ('Created activities - ', created_activities)
 
-            return render_template("show_bucketlists.html", form=form, data=created_items)
+            return render_template("show_bucketlists.html", form=form, data=created_activities)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                    Form error. Could not create bucketlist item *#*#*??\
+                                    Form error. Could not create bucketlist activity *#*#*??\
                                 </div>")
             flash(form_error)
 
