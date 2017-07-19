@@ -149,16 +149,33 @@ def show_bucketlists():
         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
         print ('Login bucks - ', has_bucks)
 
-        # If this user has bucketlists
+        # Show user has bucketlists  --> makes show bucks link in nav work
         if has_bucks:
             return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
 
         # If user has no bucketlists
         if form.validate_on_submit():
-            # Create the bucketlist
             new_bucketlist = Bucketlist(form.name.data, form.description.data)
+
+            # Add to bucketlist if user has created one
+            # bucketlist_dict = Bucketlist.bucketlists.items()
+            # for k, v in bucketlist_dict:
+            #     if session['user_id'] in v['user_id']:
+            #         new_bucketlist.add_bucketlist()
+            #         bucketlist_added = Markup("<div class='alert alert-success' role='alert'>\
+            #                                         Bucketlist added successfully\
+            #                                     </div>")
+            #         flash(bucketlist_added)
+
+            #         added_buck = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
+
+            #         print ('Existing bucks in lst - ', Bucketlist.bucketlists)
+            #         print ('Created bucks - ', added_buck)
+
+            #         return render_template("show_bucketlists.html", form=form, data=added_buck)
+                    
+            # Else Create new bucketlist
             new_bucketlist.create_bucketlist()
-            # new_bucketlist.insert_into_user()
 
             bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
                                             Bucketlist created successfully\
@@ -181,6 +198,7 @@ def show_bucketlists():
 
         # If GET
         return render_template("show_bucketlists.html", form=form)
+    
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
                                 Please sign in first to see your bucketlists\
@@ -194,26 +212,38 @@ def show_items():
     if logged_in:
         form = BucketlistItemForm(request.form)
 
+        print ('Show item - ', session['user_id'])
+
+        item_dict = BucketlistItem.bucketlist_items.items()
+        has_items = {k:v for k, v in item_dict if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_items)
+
+        # Show user has bucketlist items  --> makes show items link in nav work
+        if has_items:
+            return render_template('show_items.html', form=BucketlistItemForm(), data=has_items)
+
+        # If user has no items
         if form.validate_on_submit():
             # Create the bucketlist
             new_bucketlist_item = BucketlistItem(form.title.data, form.description.data, form.status.data)
             new_bucketlist_item.create_bucketlist_item()
-            new_bucketlist_item.insert_into_bucketlist()
 
             bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
                                             Bucketlist Item created successfully\
                                         </div>")
             flash(bucketlist_created)
             
-            data = Bucketlist.bucketlist_items
-            
-            print (data)
+            item_dict = BucketlistItem.bucketlist_items.items()
+            created_items = {k:v for k, v in item_dict if session['user_id']==v['user_id']}
 
-            return render_template('show_items.html', form=form, data=data)
+            print ('Existing items in lst - ', BucketlistItem.bucketlist_items)
+            print ('Created items - ', created_items)
+
+            return render_template("show_bucketlists.html", form=form, data=created_items)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                    Form error. Could not create bucketlist *#*#*??\
+                                    Form error. Could not create bucketlist item *#*#*??\
                                 </div>")
             flash(form_error)
 
