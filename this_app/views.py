@@ -145,14 +145,6 @@ def show_bucketlists():
 
         print ('Show bucks - ', session['user_id'])
 
-        bucketlist_dict = Bucketlist.bucketlists.items()
-        has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
-        print ('Login bucks - ', has_bucks)
-
-        # Show user has bucketlists  --> makes show bucks link in nav work
-        if has_bucks:
-            return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
-
         # If user has no bucketlists
         if form.validate_on_submit():
             new_bucketlist = Bucketlist(form.name.data, form.description.data)
@@ -214,13 +206,13 @@ def show_activities():
 
         print ('Show activity - ', session['user_id'])
 
-        activity_dict = Activity.activities.items()
-        has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
-        print ('Login bucks - ', has_activities)
+        # activity_dict = Activity.activities.items()
+        # has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
+        # print ('Login bucks - ', has_activities)
 
-        # Show user has bucketlist items  --> makes show items link in nav work
-        if has_activities:
-            return render_template('show_activities.html', form=ActivityForm(), data=has_activities)
+        # # Show user has bucketlist items  --> makes show items link in nav work
+        # if has_activities:
+        #     return render_template('show_activities.html', form=ActivityForm(), data=has_activities)
 
         # If user has no items
         if form.validate_on_submit():
@@ -249,6 +241,52 @@ def show_activities():
 
         # If GET
         return render_template("show_activities.html", form=form)
+
+    # If user is not logged in:
+    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
+                                Please sign in first to see your bucketlists\
+                            </div>")
+    flash(sign_in_first)
+
+    return render_template("login.html", form=LoginForm())
+
+@app.route('/dashboard_bucketlists', methods=['GET'])
+def dashboard_bucketlists():
+    if logged_in:
+        form = BucketlistForm(request.form)
+
+        print ('Dashboard bucks - ', session['user_id'])
+
+        bucketlist_dict = Bucketlist.bucketlists.items()
+        has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_bucks)
+
+        # Show user has bucketlists  --> makes show bucks link in nav work
+        if has_bucks:
+            return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
+
+    # If user is not logged in:
+    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
+                                Please sign in first to see your bucketlists\
+                            </div>")
+    flash(sign_in_first)
+
+    return render_template("login.html", form=LoginForm())
+
+@app.route('/dashboard_activities', methods=['GET'])
+def dashboard_activities():
+    if logged_in:
+        form = ActivityForm(request.form)
+
+        print ('Show activity - ', session['user_id'])
+
+        activity_dict = Activity.activities.items()
+        has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_activities)
+
+        # Show user has bucketlist items  --> makes show items link in nav work
+        if has_activities:
+            return render_template('show_activities.html', form=ActivityForm(), data=has_activities)
 
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\

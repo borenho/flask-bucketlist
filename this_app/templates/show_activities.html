@@ -7,7 +7,7 @@
         <nav>
             <ul class="nav nav-pills pull-right">
                 <li role="presentation"><a href="/">Home</a></li>
-                <li role="presentation"><a href="{{ url_for('show_bucketlists') }}">Bucket-lists</a></li>
+                <li role="presentation"><a href="{{ url_for('dashboard_bucketlists') }}">Bucket-lists</a></li>
                 <li role="presentation"><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -24,7 +24,7 @@
 
             {% if data %}
                 {% for key, value in data.items() %}
-                    <h4>Bucketlist {{ key }}: {{ value|count }} items</h4>
+                    <!-- <h4>Bucketlist {{ key }}: {{ value|count }} items</h4> -->
                 {% endfor %}
             
                 <table class="table">
