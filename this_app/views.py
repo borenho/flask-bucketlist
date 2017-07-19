@@ -1,6 +1,6 @@
 from flask import flash, redirect, render_template, url_for, request, session, Markup
 from this_app import app
-from .models import User, Bucketlist, Activity
+from this_app.models import User, Bucketlist, Activity
 from werkzeug.security import check_password_hash
 from .forms import SignupForm, LoginForm, BucketlistForm, ActivityForm
 
@@ -309,18 +309,43 @@ def dashboard_activities():
 def delete_bucketlist():
     if logged_in:
         bucketlist_dict = Bucketlist.bucketlists
-        # bucketlist = {k:v for k, v in bucketlist_dict if session['bucketlist_id']==k}
+        # bucketlist = {k for k in bucketlist_dict if session['bucketlist_id']==k}
 
         print ('Existing bucks in lst - ', Bucketlist.bucketlists)
         # print ('To be del - ', bucketlist)
 
         for key in bucketlist_dict:
-            if session['bucketlist_id']==key:
+            if session['bucketlist_id'] == key:
                 del bucketlist_dict[key]
 
-                print ('All dicts Should be empty - ', Bucketlist.bucketlists)
+            print ('dict should now be empty - ', Bucketlist.bucketlists)
 
-                return redirect(url_for("dashboard_bucketlists"))
+            return redirect(url_for("dashboard_bucketlists"))
+
+@app.route('/edit_bucketlist', methods=['GET', 'POST'])
+def edit_bucketlist():
+    if logged_in:
+        form = BucketlistForm(request.form)
+        
+        if form.validate_on_submit():
+            this_bucketlist = Bucketlist(form.name.data, form.description.data)
+
+            print ('Existing bucks in edit - ', Bucketlist.bucketlists)
+
+            this_bucketlist.edit_bucketlist()
+
+            print ('Buck should be diff - ', Bucketlist.bucketlists)
+
+            return redirect(url_for("dashboard_bucketlists"))
+
+        if form.errors:
+            form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                    Form error. Could not edit bucketlist *#*#*??\
+                                </div>")
+            flash(form_error)
+
+        # If GET
+        return redirect(url_for("dashboard_bucketlists", form=form))
 
 @app.route('/logout')
 def logout():

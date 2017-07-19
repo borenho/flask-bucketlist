@@ -1,4 +1,5 @@
 from werkzeug.security import generate_password_hash
+from flask import session
 
 class User(object):
     """Represents a user who can Create, Read, Update & Delete his own bucketlists"""
@@ -65,7 +66,33 @@ class Bucketlist(object):
         })
 
         return self.bucketlists
-        
+
+    def edit_bucketlist(self):
+        """ Class to edit bucketlist """
+
+        # Get the key and update the values
+        bucketlist_dict = Bucketlist.bucketlists
+        print('edit buck -', bucketlist_dict)
+        if len(bucketlist_dict) > 1:
+            bucketlist = {k:v for k, v in bucketlist_dict.items() if session['bucketlist_id']==k}
+            for key in bucketlist:
+                if session['bucketlist_id']==key:
+                    for k, v in bucketlist.items():
+                        existing_owner = v['user_id']
+                        bucketlist[key] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
+
+                        return bucketlist
+
+            return bucketlist
+        # Use different logic if one item present in dict
+        else:
+            for key in bucketlist_dict:
+                if session['bucketlist_id']==key:
+                    for k, v in bucketlist_dict.items():
+                        existing_owner = v['user_id']
+                        bucketlist_dict[key] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
+
+                        return bucketlist_dict
 
 
 class Activity(object):
