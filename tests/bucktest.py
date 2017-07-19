@@ -54,3 +54,22 @@ class BucketlistTestCase(unittest.TestCase):
         result = self.bucketlist.create_bucketlist()
         expected = {2: {'user_id': 2, 'name': 'Hiking', 'description': 'Go for hiking'}}
         self.assertEqual(expected, result)
+
+    # def tearDown(self):
+    #     """ Setup a bucketlist """
+    #     self.bucketlist = {}
+
+
+class BucketlistItemTestCase(unittest.TestCase):
+    """ Test the BucketlistItem class """
+
+    def setUp(self):
+        """ Setup a bucketlist """
+        self.bucketlist_item = BucketlistItem('Hiking', 'Go for hiking', True)
+
+    def test_successful_bucketlist_item_creation(self):
+        """Test bucketlist item creation is successful"""
+        self.bucketlist_item.bucketlist_items = {}
+        result = self.bucketlist_item.create_bucketlist_item()
+        expected = {1: {'bucketlist_id': 2, 'name': 'Hiking', 'description': 'Go for hiking', 'status': True}}
+        self.assertEqual(expected, result)
