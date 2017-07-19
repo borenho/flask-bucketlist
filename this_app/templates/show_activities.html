@@ -30,7 +30,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Item Title</th>
+                            <th>Activity Title</th>
                             <th>Description</th>
                             <th>Active</th>
                             <th>Actions</th>
@@ -38,12 +38,12 @@
                     </thead>
                     <tbody>
                         {% for k, e in data.items() %}
-                            {% for u, s in e.items() %}
+                            
                                 <tr>
-                                    <td>{{ s['title'] }}</td>
-                                    <td>{{ s['description'] }}</td>
+                                    <td>{{ e['title'] }}</td>
+                                    <td>{{ e['description'] }}</td>
                                     <td>
-                                        {% if s['status'] %}
+                                        {% if e['status'] %}
                                             <span class="glyphicon glyphicon-ok"></span>
                                         {% else %}
                                             <span class="glyphicon glyphicon-remove"></span>
@@ -62,10 +62,10 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        <h4 class="modal-title">Edit Item</h4>
+                                                        <h4 class="modal-title">Edit Activity</h4>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <form action="/show_items" method="POST">
+                                                        <form action="/show_activities" method="POST">
                                                             <div class="row form-group">
                                                                 <div class="col-lg-3">
                                                                     <h4>Title</h4>
@@ -118,15 +118,15 @@
                                         </div>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                            
                         {% endfor %}
                     </tbody>
                 </table>
-                <button class="btn btn-primary" data-toggle="modal" data-target="#add-item-modal">Add new item</button> </br>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#add-activity-modal">Add new item</button> </br>
                 <br>
 
                 <!-- Add Item Modal -->
-                <div class="modal fade" id="add-item-modal" role="dialog">
+                <div class="modal fade" id="add-activity-modal" role="dialog">
                     <div class="modal-dialog">
                     
                         <!-- Modal content-->
@@ -136,7 +136,7 @@
                                 <h4 class="modal-title">Add Bucketlist Item</h4>
                             </div>
                             <div class="modal-body">
-                                <form action="/show_items" method="POST">
+                                <form action="/show_activities" method="POST">
                                     {{ form.csrf_token }}
                                     {{ form.hidden }}
                                     <div class="row form-group">
@@ -174,22 +174,21 @@
                 </div>
 
             {% else %}
-                <h4>OooOopS!</h4>
-                <h3>Your bucket list is as empty as the oil wells of Ngamia 1, fill in the bucket?</h3><br>
-                <button class="btn btn-primary" data-toggle="modal" data-target="#add-item-modal">Create Bucketlist Item</button> </br>
+                <h3>Your bucket list is empty. Add some activities</h3><br>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#add-activity-modal">Create Bucketlist Item</button> </br>
                 </br></br>
                 <!-- Add Item Modal -->
-                <div class="modal fade" id="add-item-modal" role="dialog">
+                <div class="modal fade" id="add-activity-modal" role="dialog">
                     <div class="modal-dialog">
                     
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title">Add Bucketlist Item</h4>
+                                <h4 class="modal-title">Add Activity</h4>
                             </div>
                             <div class="modal-body">
-                                <form action="/show_items" method="POST">
+                                <form action="/show_activities" method="POST">
                                     {{ form.csrf_token }}
                                     {{ form.hidden }}
                                     <div class="row form-group">
@@ -197,7 +196,7 @@
                                             <h4>Title</h4>
                                         </div>
                                         <div class="col-lg-7">
-                                            {{ form.title(class_ = 'form-control', placeholder = "Bucketlist Title", autofocus=true, required=true) }}
+                                            {{ form.title(class_ = 'form-control', placeholder = "Activity Title", autofocus=true, required=true) }}
                                         </div>
                                     </div>
                                     <div class="row form-group">

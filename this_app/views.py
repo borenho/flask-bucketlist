@@ -207,7 +207,7 @@ def show_bucketlists():
 
     return render_template("login.html", form=LoginForm())
 
-@app.route('/show_items', methods=['GET', 'POST'])
+@app.route('/show_activities', methods=['GET', 'POST'])
 def show_activities():
     if logged_in:
         form = ActivityForm(request.form)
@@ -215,12 +215,12 @@ def show_activities():
         print ('Show activity - ', session['user_id'])
 
         activity_dict = Activity.activities.items()
-        has_activitys = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
-        print ('Login bucks - ', has_activitys)
+        has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
+        print ('Login bucks - ', has_activities)
 
         # Show user has bucketlist items  --> makes show items link in nav work
-        if has_activitys:
-            return render_template('show_items.html', form=ActivityForm(), data=has_activitys)
+        if has_activities:
+            return render_template('show_activities.html', form=ActivityForm(), data=has_activities)
 
         # If user has no items
         if form.validate_on_submit():
@@ -239,7 +239,7 @@ def show_activities():
             print ('Existing items in lst - ', Activity.activities)
             print ('Created activities - ', created_activities)
 
-            return render_template("show_bucketlists.html", form=form, data=created_activities)
+            return render_template("show_activities.html", form=form, data=created_activities)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -248,7 +248,7 @@ def show_activities():
             flash(form_error)
 
         # If GET
-        return render_template("show_items.html", form=form)
+        return render_template("show_activities.html", form=form)
 
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
