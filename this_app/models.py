@@ -83,7 +83,6 @@ class Bucketlist(object):
 
                         return bucketlist
 
-            return bucketlist
         # Use different logic if one item present in dict
         else:
             for key in bucketlist_dict:
@@ -134,8 +133,8 @@ class Activity(object):
             for key in activity:
                 if session['activity_id']==key:
                     for k, v in activity.items():
-                        bucket = v['user_id']
-                        activity[key] = {'user_id': bucket, 'title': self.title, 'description': self.description, 'status': self.status}
+                        bucket = v['bucketlist_id']
+                        activity[key] = {'bucketlist_id': bucket, 'title': self.title, 'description': self.description, 'status': self.status}
 
                         return activity
 

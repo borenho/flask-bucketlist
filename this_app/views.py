@@ -143,7 +143,7 @@ def show_bucketlists():
     if logged_in:
         form = BucketlistForm(request.form)
 
-        print ('Show bucks - ', session['user_id'])
+        print ('Session user id - ', session['user_id'])
 
         # If user has no bucketlists
         if form.validate_on_submit():
@@ -209,7 +209,7 @@ def show_activities():
     if logged_in:
         form = ActivityForm(request.form)
 
-        print ('Show activity - ', session['user_id'])
+        print ('Show buck id session in activity - ', session['bucketlist_id'])
 
         # activity_dict = Activity.activities.items()
         # has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
@@ -265,7 +265,8 @@ def dashboard_bucketlists():
     if logged_in:
         form = BucketlistForm(request.form)
 
-        print ('Dashboard bucks - ', session['user_id'])
+        print ('Session user id in dash - ', session['user_id'])
+        print ('Session buck id in dash - ', session['bucketlist_id'])
 
         bucketlist_dict = Bucketlist.bucketlists.items()
         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
