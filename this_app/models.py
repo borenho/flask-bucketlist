@@ -122,3 +122,29 @@ class Activity(object):
         })
         
         return self.activities
+
+    def edit_activity(self):
+        """ Class to edit bucketlist """
+
+        # Get the key and update the values
+        activity_dict = Activity.activities
+        print('edit activity -', activity_dict)
+        if len(activity_dict) > 1:
+            activity = {k:v for k, v in activity_dict.items() if session['activity_id']==k}
+            for key in activity:
+                if session['activity_id']==key:
+                    for k, v in activity.items():
+                        bucket = v['user_id']
+                        activity[key] = {'user_id': bucket, 'title': self.title, 'description': self.description, 'status': self.status}
+
+                        return activity
+
+        # Use different logic if one item present in dict
+        else:
+            for key in activity_dict:
+                if session['activity_id']==key:
+                    for k, v in activity_dict.items():
+                        bucket = v['bucketlist_id']
+                        activity_dict[key] = {'bucketlist_id': bucket, 'title': self.title, 'description': self.description, 'status': self.status}
+
+                        return activity_dict

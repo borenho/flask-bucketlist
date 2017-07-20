@@ -276,7 +276,6 @@ def dashboard_bucketlists():
         if has_bucks:
             return render_template('show_bucketlists.html', form=form, data=has_bucks)
 
-
         # If no bucketlists exist
         return redirect(url_for('show_bucketlists', form=form))
 
@@ -303,6 +302,9 @@ def dashboard_activities():
         # Show bucket activities  --> makes show items link in nav work
         if bucket_activities:
             return render_template('show_activities.html', form=form, data=bucket_activities)
+
+        # If no activities exist
+        return redirect(url_for('show_activities', form=form))
 
     # If user is not logged in:
     sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
@@ -366,6 +368,31 @@ def edit_bucketlist():
 
         # If GET
         return redirect(url_for("dashboard_bucketlists", form=form))
+
+@app.route('/edit_activity', methods=['GET', 'POST'])
+def edit_activity():
+    if logged_in:
+        form = ActivityForm(request.form)
+        print ('Edit started')
+        if request.method == 'POST':
+            this_activity = Activity(form.title.data, form.description.data, form.status.data)
+
+            print ('Existing activites on edit - ', Activity.bucketlists)
+
+            this_activity.edit_activity()
+
+            print ('Activity should be diff - ', Activity.bucketlists)
+
+            return redirect(url_for("dashboard_activities"))
+
+        if form.errors:
+            form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                    Form error. Could not edit activity *#*#*??\
+                                </div>")
+            flash(form_error)
+
+        # If GET
+        return redirect(url_for("dashboard_activities", form=form))
 
 @app.route('/logout')
 def logout():
