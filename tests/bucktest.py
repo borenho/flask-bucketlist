@@ -1,4 +1,4 @@
-from flask import url_for
+from flask import url_for, session
 from this_app import app
 from this_app.models import User, Bucketlist, Activity
 import unittest
@@ -49,29 +49,34 @@ class UserTestCase(unittest.TestCase):
         self.user.users = {}
         self.user.create_user()
         tester = app.test_client(self)
-        login = tester.post('/login',
+        response = tester.post('/login',
                             data=dict(email='leo@email.com',
                                       password='pwd'),
                             follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
     def test_invalid_credentials_redirects_to_login(self):
+        """Users need valid credentials"""
         self.user.users = {}
         self.user.create_user()
         tester = app.test_client(self)
-        login = tester.post('/login',
+        response = tester.post('/login',
                             data=dict(email='leo@email.com',
                                       password='pwc'),
                             follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
     def test_signup_existing_user_redirects_to_login(self):
+        """Users get redirected to login if they have a/c"""
         self.user.users = {}
         self.user.create_user()
         tester = app.test_client(self)
-        login = tester.post('/signup',
+        response = tester.post('/signup',
                             data=dict(email='leo@email.com',
                                       usrname='leo',
                                       password='pwd'),
                             follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
 
 class BucketlistTestCase(unittest.TestCase):
@@ -83,6 +88,29 @@ class BucketlistTestCase(unittest.TestCase):
 
     def tearDown(self):
         del self.bucketlist
+
+    def test_show_bucketlists_without_login_redirects(self):
+        """Users need valid credentials"""
+        User.users = {}
+        tester = app.test_client(self)
+        response = tester.post('/show_bucketlists', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_bucketlists_dashboard_without_login_redirects(self):
+        """Users need valid credentials"""
+        User.users = {}
+        tester = app.test_client(self)
+        response = tester.get('/dashboard_bucketlists', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+    
+    # def test_update_bucketlist(self):
+    #     """ Users can update bucketlists """
+    #     self.bucketlist.bucketlists = {}
+    #     self.bucketlist.create_bucketlist()
+    #     former = self.bucketlist
+    #     self.bucketlist.edit_bucketlist()
+    #     latter = self.bucketlist
+    #     self.assertNotEqual(former, latter)
 
     def test_create_bucketlist_without_user_fails(self):
         """Test bucketlist creation without a new user fails"""
@@ -96,8 +124,8 @@ class BucketlistTestCase(unittest.TestCase):
         """Test bucketlist creation is successful"""
         self.bucketlist.bucketlists = {}
         result = self.bucketlist.create_bucketlist()
-        expected = {2: {'user_id': 3, 'name': 'Hiking', 'description': 'Go for hiking'}}
-        # self.assertEqual(expected, result)
+        expected = {4: {'user_id': 4, 'name': 'Hiking', 'description': 'Go for hiking'}}
+        self.assertEqual(expected, result)
 
 
 class ActivityTestCase(unittest.TestCase):
@@ -114,5 +142,19 @@ class ActivityTestCase(unittest.TestCase):
         """Test bucketlist item creation is successful"""
         self.activity.activities = {}
         result = self.activity.create_activity()
-        expected = {1: {'bucketlist_id': 2, 'title': 'Hiking', 'description': 'Go for hiking', 'status': True}}
+        expected = {3: {'bucketlist_id': 4, 'title': 'Hiking', 'description': 'Go for hiking', 'status': True}}
         self.assertEqual(expected, result)
+
+    def test_show_activities_without_login_redirects(self):
+        """Users need valid credentials"""
+        User.users = {}
+        tester = app.test_client(self)
+        response = tester.post('/show_bucketlists', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+    def test_activities_dashboard_without_login_redirects(self):
+        """Users need valid credentials"""
+        User.users = {}
+        tester = app.test_client(self)
+        response = tester.get('/dashboard_activities', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
