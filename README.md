@@ -1,5 +1,5 @@
 # The Flask Bucketlist App
-https://travis-ci.org/borenho/flask-bucketlist.svg?branch=challenge-1
+[![Build Status](https://travis-ci.org/borenho/flask-bucketlist.svg?branch=challenge-1)](https://travis-ci.org/borenho/flask-bucketlist)
 
 A simple Python Flask bucket-list application that allows users to keep track of the things they want to achieve and experience before reaching a certain age, and to share the fun with others along the way.
 
