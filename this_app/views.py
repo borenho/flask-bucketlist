@@ -15,13 +15,13 @@ def index():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if logged_in:
-        login_instead = Markup("<div class='alert alert-info' role='alert'>\
-                                    You are logged in. You might want to logout first\
-                                </div>")
-        flash(login_instead)
+    # if logged_in:
+    #     login_instead = Markup("<div class='alert alert-info' role='alert'>\
+    #                                 You are logged in. You might want to logout first\
+    #                             </div>")
+    #     flash(login_instead)
 
-        return redirect(url_for("show_bucketlists", form=BucketlistForm()))
+    #     return redirect(url_for("show_bucketlists", form=BucketlistForm()))
 
     # If user is not signed in
     form = SignupForm(request.form)
