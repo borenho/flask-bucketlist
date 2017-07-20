@@ -15,61 +15,61 @@ def index():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    # if logged_in:
-    #     login_instead = Markup("<div class='alert alert-info' role='alert'>\
-    #                                 You are logged in. You might want to logout first\
-    #                             </div>")
-    #     flash(login_instead)
+    global logged_in
+    if logged_in:    # == True
+        return logout_required()
+    else:
+        # If user is not signed in
+        form = SignupForm(request.form)
 
-    #     return redirect(url_for("show_bucketlists", form=BucketlistForm()))
+        if form.validate_on_submit(): 
+            # Throw an error if email is already registered
+            users_dict = User.users.items()    
+            existing_user = {k:v for k, v in users_dict if form.email.data in v['email']}
+            if existing_user:
+                email_exists = Markup("<div class='alert alert-info' role='alert'>\
+                                            The email entered is registered, please login instead\
+                                        </div>")
+                flash(email_exists)
 
-    # If user is not signed in
-    form = SignupForm(request.form)
+                return render_template("login.html", form=LoginForm())
+            
+            # If email is not registered, register the user
+            new_user = User(form.email.data, form.username.data, form.password.data)
+            new_user.create_user()
 
-    if form.validate_on_submit(): 
-        # Throw an error if email is already registered
-        users_dict = User.users.items()    
-        existing_user = {k:v for k, v in users_dict if form.email.data in v['email']}
-        if existing_user:
-            email_exists = Markup("<div class='alert alert-info' role='alert'>\
-                                        The email entered is registered, please login instead\
-                                    </div>")
-            flash(email_exists)
+            for key, value in users_dict:     # gets id, eg 2
+                if form.email.data in value['email']:
+                    session['user_id'] = key
+                    print ('User signup session ID - ', session['user_id'])
+            # global logged_in
+            logged_in = True
 
-            return render_template("login.html", form=LoginForm())
-        
-        # If email is not registered, register the user
-        new_user = User(form.email.data, form.username.data, form.password.data)
-        new_user.create_user()
+            successful_signup = Markup("<div class='alert alert-success' role='alert'>\
+                                            Account created successfully\
+                                        </div>")
+            flash(successful_signup)
 
-        for key, value in users_dict:     # gets id, eg 2
-            if form.email.data in value['email']:
-                session['user_id'] = key
-                print ('User signup session ID - ', session['user_id'])
+            print('All users - ', User.users)
 
-        global logged_in
-        logged_in = True
+            return redirect(url_for("show_bucketlists", form=BucketlistForm()))
 
-        successful_signup = Markup("<div class='alert alert-success' role='alert'>\
-                                        Account created successfully\
-                                    </div>")
-        flash(successful_signup)
+        if form.errors:
+            form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                    Form error. Either email, username or password is invalid\
+                                </div>")
+            flash(form_error)
 
-        print('All users - ', User.users)
-
-        return redirect(url_for("show_bucketlists", form=BucketlistForm()))
-
-    if form.errors:
-        form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                Form error. Either email, username or password is invalid\
-                            </div>")
-        flash(form_error)
-
-    # If GET
-    return render_template("signup.html", form=form)
+        # If GET
+        return render_template("signup.html", form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global logged_in
+    if logged_in:    # == True
+        logout_required()
+    
+    # Else if user not logged in
     form = LoginForm(request.form)
 
     if form.validate_on_submit():
@@ -83,7 +83,7 @@ def login():
             valid_user = [v for v in existing_user.values() if check_password_hash(v['password'], form.password.data)]
             if valid_user:  
                 # Log the user in as credentials are valid
-                global logged_in
+                # global logged_in
                 logged_in = True
 
                 print (existing_user)
@@ -145,28 +145,11 @@ def show_bucketlists():
 
         print ('Session user id - ', session['user_id'])
 
+        all_bucketlists = Bucketlist.bucketlists.items()
+
         # If user has no bucketlists
         if form.validate_on_submit():
             new_bucketlist = Bucketlist(form.name.data, form.description.data)
-
-            # Add to bucketlist if user has created one
-            # bucketlist_dict = Bucketlist.bucketlists.items()
-            # for k, v in bucketlist_dict:
-            #     if session['user_id'] in v['user_id']:
-            #         new_bucketlist.add_bucketlist()
-            #         bucketlist_added = Markup("<div class='alert alert-success' role='alert'>\
-            #                                         Bucketlist added successfully\
-            #                                     </div>")
-            #         flash(bucketlist_added)
-
-            #         added_buck = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
-
-            #         print ('Existing bucks in lst - ', Bucketlist.bucketlists)
-            #         print ('Created bucks - ', added_buck)
-
-            #         return render_template("show_bucketlists.html", form=form, data=added_buck)
-                    
-            # Else Create new bucketlist
             new_bucketlist.create_bucketlist()
 
             bucketlist_created = Markup("<div class='alert alert-success' role='alert'>\
@@ -197,12 +180,7 @@ def show_bucketlists():
         return render_template("show_bucketlists.html", form=form)
     
     # If user is not logged in:
-    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
-                                Please sign in first to see your bucketlists\
-                            </div>")
-    flash(sign_in_first)
-
-    return render_template("login.html", form=LoginForm())
+    return login_required()
 
 @app.route('/show_activities', methods=['GET', 'POST'])
 def show_activities():
@@ -211,15 +189,6 @@ def show_activities():
 
         print ('Show buck id session in activity - ', session['bucketlist_id'])
 
-        # activity_dict = Activity.activities.items()
-        # has_activities = {k:v for k, v in activity_dict} # if session['user_id'] in v.values()}
-        # print ('Login bucks - ', has_activities)
-
-        # # Show user has bucketlist items  --> makes show items link in nav work
-        # if has_activities:
-        #     return render_template('show_activities.html', form=ActivityForm(), data=has_activities)
-
-        # If user has no items
         if form.validate_on_submit():
             # Create the bucketlist
             new_activity = Activity(form.title.data, form.description.data, form.status.data)
@@ -253,12 +222,7 @@ def show_activities():
         return render_template("show_activities.html", form=form)
 
     # If user is not logged in:
-    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
-                                Please sign in first to see your bucketlists\
-                            </div>")
-    flash(sign_in_first)
-
-    return render_template("login.html", form=LoginForm())
+    login_required()
 
 @app.route('/dashboard_bucketlists', methods=['GET'])
 def dashboard_bucketlists():
@@ -281,12 +245,7 @@ def dashboard_bucketlists():
         return redirect(url_for('show_bucketlists', form=form))
 
     # If user is not logged in:
-    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
-                                Please sign in first to see your bucketlists\
-                            </div>")
-    flash(sign_in_first)
-
-    return render_template("login.html", form=LoginForm())
+    login_required()
 
 @app.route('/dashboard_activities', methods=['GET'])
 def dashboard_activities():
@@ -308,12 +267,7 @@ def dashboard_activities():
         return redirect(url_for('show_activities', form=form))
 
     # If user is not logged in:
-    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
-                                Please sign in first to see your bucketlists\
-                            </div>")
-    flash(sign_in_first)
-
-    return render_template("login.html", form=LoginForm())
+    login_required()
 
 @app.route('/delete_bucketlist', methods=['GET', 'POST'])
 def delete_bucketlist():
@@ -403,6 +357,23 @@ def logout():
     session.pop('bucketlist_id', None)
 
     return redirect(url_for('index'))
+
+def login_required():
+    # If user is not logged in:
+    sign_in_first = Markup("<div class='alert alert-danger' role='alert'>\
+                                Please sign in first to see your bucketlists\
+                            </div>")
+    flash(sign_in_first)
+
+    return render_template("login.html", form=LoginForm())
+
+def logout_required():
+    logout_instead = Markup("<div class='alert alert-info' role='alert'>\
+                                    You are logged in. You might want to logout first\
+                                </div>")
+    flash(logout_instead)
+
+    return redirect(url_for("show_bucketlists", form=BucketlistForm()))
 
 def select_activity():
     form = ActivityForm(request.form)
