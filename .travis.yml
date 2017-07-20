@@ -9,4 +9,4 @@ install: 'pip install -r requirements.txt'
 
 
 # Run tests
-script: pytest
+script: pytest tests/buctest.py
