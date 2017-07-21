@@ -42,7 +42,7 @@ def signup():
                 if form.email.data in value['email']:
                     session['user_id'] = key
                     print ('User signup session ID - ', session['user_id'])
-            # global logged_in
+
             logged_in = True
 
             successful_signup = Markup("<div class='alert alert-success' role='alert'>\
@@ -55,10 +55,21 @@ def signup():
             return redirect(url_for("show_bucketlists", form=BucketlistForm()))
 
         if form.errors:
-            form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                    Form error. Either email, username or password is invalid\
-                                </div>")
-            flash(form_error)
+            if len(form.password.data) < 4:
+                form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                        Password should be more than 4 chars\
+                                    </div>")
+                flash(form_error)
+            if len(form.username.data) < 4:
+                form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                        Username should be more than 4 chars\
+                                    </div>")
+                flash(form_error)
+            else:
+                form_error = Markup("<div class='alert alert-danger' role='alert'>\
+                                        Enter valid email, like j.deere@mail.com\
+                                    </div>")
+                flash(form_error)
 
         # If GET
         return render_template("signup.html", form=form)
@@ -83,7 +94,6 @@ def login():
             valid_user = [v for v in existing_user.values() if check_password_hash(v['password'], form.password.data)]
             if valid_user:  
                 # Log the user in as credentials are valid
-                # global logged_in
                 logged_in = True
 
                 print (existing_user)
@@ -131,7 +141,7 @@ def login():
 
     if form.errors:
         form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                Form error. Either email or password is invalid\
+                                Enter valid email, like j.deere@mail.com\
                             </div>")
         flash(form_error)
 
@@ -168,7 +178,7 @@ def show_bucketlists():
 
                 print ('session Buck id - ', session['bucketlist_id'])
 
-                return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
+            return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -276,9 +286,8 @@ def delete_bucketlist():
 
         print ('Existing bucks in lst - ', Bucketlist.bucketlists)
 
-        for key in bucketlist_dict:
-            if session['bucketlist_id'] == key:
-                del bucketlist_dict[key]
+        for key in bucketlist_dict:    # Del last element added
+            del bucketlist_dict[key]
 
             print ('dict should now be empty - ', Bucketlist.bucketlists)
 
