@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash
-from flask import session
+from flask import session, request
 
 class User(object):
     """Represents a user who can Create, Read, Update & Delete his own bucketlists"""
@@ -51,6 +51,7 @@ class Bucketlist(object):
             self.buck_id: {'user_id': User.user_id, 'name': self.name, 'description': self.description}
         })
 
+        global bucketlists
         return self.bucketlists
         
 
@@ -68,30 +69,39 @@ class Bucketlist(object):
         return self.bucketlists
 
     def edit_bucketlist(self):
-        """ Class to edit bucketlist """
+        """
+        Class to edit bucketlist
+        """
+        bucketlists_dict = Bucketlist.bucketlists.items()
+        user_bucketlists = {k:v for k, v in bucketlists_dict if session['user_id']==v['user_id']}
+        bucketlist = {k:v for k, v in user_bucketlists.items() if k==int(request.form['key'])}
+        print('To be edited =', bucketlist)
+        for k, v in bucketlist.items():
+            existing_owner = v['user_id']
+            bucketlist[k] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
 
-        # Get the key and update the values
-        bucketlist_dict = Bucketlist.bucketlists
-        print('edit buck -', bucketlist_dict)
-        if len(bucketlist_dict) > 1:
-            bucketlist = {k:v for k, v in bucketlist_dict.items() if session['bucketlist_id']==k}
-            for key in bucketlist:
-                if session['bucketlist_id']==key:
-                    for k, v in bucketlist.items():
-                        existing_owner = v['user_id']
-                        bucketlist[key] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
+            print('Should have been edited =', bucketlist)
+            global bucketlist
+            return bucketlist
 
-                        return bucketlist
+    def get_all(self):
+        """
+        Gets all the bucketlists created by a logged in user
+        """
+        pass
 
-        # Use different logic if one item present in dict
-        else:
-            for key in bucketlist_dict:
-                if session['bucketlist_id']==key:
-                    for k, v in bucketlist_dict.items():
-                        existing_owner = v['user_id']
-                        bucketlist_dict[key] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
+    def delete_bucketlist(self, id):
+        """
+        Deletes a single bucketlist created by a logged in user
+        """
+        # Retrieve a user's bucketlist using it's ID
+        bucketlists_dict = Bucketlist.bucketlists.items()
+        user_bucketlists = {k:v for k, v in bucketlists_dict if session['user_id']==v['user_id']}
+        bucketlist = {k:v for k, v in user_bucketlists.items() if id==k}
 
-                        return bucketlist_dict
+        del bucketlist
+        global user_bucketlists
+        return user_bucketlists
 
 
 class Activity(object):

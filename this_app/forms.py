@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, TextField
 from wtforms.validators import DataRequired, Length, Email
 
 
@@ -20,11 +20,11 @@ class LoginForm(FlaskForm):
 class BucketlistForm(FlaskForm):
     """Form to CRUd a bucketlist"""
     name = StringField("Name", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = TextField("Description", validators=[DataRequired()])
 
 
 class ActivityForm(FlaskForm):
     """Form to CRUd a bucketlist item"""
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = TextField("Description", validators=[DataRequired()])
     status = BooleanField("Status")
