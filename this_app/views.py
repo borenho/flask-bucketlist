@@ -337,7 +337,7 @@ def edit_bucketlist():
 
             bucketlist.edit_bucketlist()
 
-            print ('Bucks should be diff - ', Bucketlist.bucketlists)
+            print ('Bucks should be different - ', Bucketlist.bucketlists)
 
             return redirect(url_for("dashboard_bucketlists", data=user_bucketlists))
 
