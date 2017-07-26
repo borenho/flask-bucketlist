@@ -26,15 +26,19 @@ class UserTestCase(unittest.TestCase):
     def setUp(self):
         """ Setup a new user """
         User.users = {}
-        self.user = User('leo@email.com', 'leo', 'pwd')
-
-    def tearDown(self):
-        del self.user
+        self.app = User('leo@email.com', 'leo', 'pwd')
+        # Initialize the test client
+        self.client = app.test_client(self)
+        # Set some default user data
+        self.user_data = {
+            1 : {'leo@email.com', 'leo', 'pwd'},
+            2 : {'trieu@email.com', 'trieu', 'pwwd'}
+        }
 
     def test_users_can_signup(self):
         """Test new user can sign up successfully"""
-        for key, value in self.user.users.items():
-            result = self.user.create_user()
+        for key, value in self.app.users.items():
+            result = self.app.create_user()
             stored_password = value['password']
             expected = {0: {
                 'email': 'leo@email.com', 'username': 'leo', 'password': stored_password
@@ -78,8 +82,12 @@ class UserTestCase(unittest.TestCase):
     def test_bucketlists_dashboard_without_login_redirects(self):
         """Users need valid credentials"""
         tester = app.test_client(self)
-        response = tester.get('/dashboard_bucketlists', follow_redirects=True)
+        response = tester.get('/show_bucketlists', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
+
+    def tearDown(self):
+        del self.app
+        del self.user_data
 
 
 class BucketlistTestCase(unittest.TestCase):
@@ -104,7 +112,7 @@ class BucketlistTestCase(unittest.TestCase):
     #     self.assertNotEqual(former, latter)
 
     def test_create_bucketlist_without_user_fails(self):
-        """Test bucketlist creation without a new user fails"""
+        """Test bucketlist creation without a user fails"""
         User.users = {}
         result = self.bucketlist.create_bucketlist()
         expected = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
@@ -149,5 +157,5 @@ class ActivityTestCase(unittest.TestCase):
         """Users need valid credentials"""
         User.users = {}
         tester = app.test_client(self)
-        response = tester.get('/dashboard_activities', follow_redirects=True)
+        response = tester.get('/show_activities', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
