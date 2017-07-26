@@ -31,19 +31,27 @@ class UserTestCase(unittest.TestCase):
         self.client = app.test_client(self)
         # Set some default user data
         self.user_data = {
-            1 : {'leo@email.com', 'leo', 'pwd'},
-            2 : {'trieu@email.com', 'trieu', 'pwwd'}
+            'email': 'leo@email.com',
+            'username': 'leo',
+            'password': 'pwd'
         }
 
     def test_users_can_signup(self):
         """Test new user can sign up successfully"""
-        for key, value in self.app.users.items():
+        for value in self.app.users.values():
             result = self.app.create_user()
             stored_password = value['password']
             expected = {0: {
                 'email': 'leo@email.com', 'username': 'leo', 'password': stored_password
                 }}
             self.assertEqual(expected, result)
+
+    def test_already_registered_user(self):
+        """Test that a user cannot be registered twice."""
+        res = self.client.post('signup', data=self.user_data)
+        self.assertEqual(res.status_code, 201)
+        second_res = self.client.post('signup', data=self.user_data)
+        self.assertEqual(second_res.status_code, 202)
 
     def test_successful_login(self):
         """Test registered user can login successfully"""

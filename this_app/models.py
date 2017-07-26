@@ -116,12 +116,12 @@ class Activity(object):
         self.description = description
         self.status = status
 
-    def create_activity(self):
+    def create_activity(self, bucketlist_id):
         """ Class to create and store a bucketlist item """
 
         self.activities.update({
             self.activity_id: {
-                'bucketlist_id': Bucketlist.buck_id,
+                'bucketlist_id': bucketlist_id,
                 'title': self.title,
                 'description': self.description,
                 'status': self.status
@@ -163,16 +163,17 @@ class Activity(object):
         return buck_activities
 
     @staticmethod
-    def delete_activity():
+    def delete_activity(bucketlist_id, key):
         """
         Deletes a single bucketlist created by a logged in user
         """
-        # Retrieve a user's bucketlist using it's ID
+        print('Passing')
+        print('Key', key)
         all_activities = Activity.activities
         for item in all_activities.values():
-            if session['bucketlist_id'] == item['bucketlist_id']:
-                for key in all_activities:
-                    if key == int(request.form['key']):
+            if bucketlist_id == item['bucketlist_id']:
+                for k in all_activities:
+                    if k == key:
                         print('To be deleted =', all_activities[key])
                         del all_activities[key]
 

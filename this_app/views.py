@@ -211,157 +211,55 @@ def show_bucketlists():
     # If user is not logged in:
     return login_required()
 
-@app.route('/show_activities', methods=['GET', 'POST'])
-def show_activities():
+@app.route('/show_activities/<int:bucketlist_id>', methods=['GET', 'POST'])
+def show_activities(bucketlist_id):
+    """
+    Show a bucketlists's activities
+    """
+    form = ActivityForm(request.form)
     if logged_in:
-        form = ActivityForm(request.form)
-        
-        # session['bucketlist_id'] = int(request.form['key'])
-        if session['bucketlist_id']:
-            print ('Show buck id session in show activity - ', session['bucketlist_id'])
-
-        if form.validate_on_submit():
-            # Create the bucketlist
-            new_activity = Activity(form.title.data, form.description.data, form.status.data)
-            new_activity.create_activity()
-
-            activity_created = Markup("<div class='alert alert-success' role='alert'>\
-                                            Bucketlist activity created successfully\
-                                        </div>")
-            flash(activity_created)
-            
-            # Select the activity belonging to the current bucket
-            all_activities = Activity.activities
-            # created_activities = {k:v for k, v in all_activities if session['bucketlist_id']==v['bucketlist_id']}
-            for k, v in all_activities.items():
-                if session['bucketlist_id'] == v['bucketlist_id']:
-
-                    print ('Existing activities - ', all_activities)
-                    # print ('Show Bucket activities - ', created_activities)
-
-                    return render_template("show_activities.html", form=form, data=all_activities)
-
-        if form.errors:
-            form_error = Markup("<div class='alert alert-danger' role='alert'>\
-                                    Form error. Could not create bucketlist activity *#*#*??\
-                                </div>")
-            flash(form_error)
 
         # Check if buck has activities
         all_activities = Activity.activities
-        # buck_activities = {k:v for k, v in all_activities.items() if session['bucketlist_id']==v['bucketlist_id']}
-        for k, v in all_activities.items():
-                if session['bucketlist_id'] == v['bucketlist_id']:
-
-                    print ('Buck activities - ', all_activities)
-                    # print ('Show Bucket activities - ', created_activities)
-
-                    return render_template("show_activities.html", form=form, data=all_activities)
-
         print ('All activities - ', all_activities)
-        # print ('BUck activities - ', buck_activities)
+        print('buck id', bucketlist_id)
+        buck_activities = {k:v for k, v in all_activities.items() if bucketlist_id==v['bucketlist_id']}
+        if buck_activities:
+            return render_template("show_activities.html", form=form, bucketlist_id=bucketlist_id, data=buck_activities)
 
-        # Show user has bucketlists  --> makes show bucks link in nav work
-        # if buck_activities:
-            
-        #     return render_template('show_activities.html', form=form, data=buck_activities)
-        
-        # If GET
-        return render_template("show_activities.html", form=form)
+        # If buck ids do not match
+        print('Buck IDs  mismatch')
+        return render_template('show_activities.html', form=form, bucketlist_id=bucketlist_id)
 
     # If user is not logged in:
     return login_required()
 
-@app.route('/show_activity/<int:bucketlist_id>', methods=['GET', 'POST'])
-def show_activity(bucketlist_id):
-    if logged_in:
-        form = ActivityForm(request.form)
-        
-        session['bucketlist_id'] = bucketlist_id
-        print ('Show buck id session in activity - ', session['bucketlist_id'])
-        print ('bucketlistID - ', bucketlist_id)
-
-        # if form.validate_on_submit():
-        #     # Create the bucketlist
-        #     new_activity = Activity(form.title.data, form.description.data, form.status.data)
-        #     new_activity.create_activity()
-
-        #     activity_created = Markup("<div class='alert alert-success' role='alert'>\
-        #                                     Bucketlist activity created successfully\
-        #                                 </div>")
-        #     flash(activity_created)
-            
-        #     # Select the activity belonging to the current bucket
-        #     all_activities = Activity.activities
-        #     print ('All activities - ', all_activities)
-        #     # created_activities = {k:v for k, v in all_activities if session['bucketlist_id']==v['bucketlist_id']}
-        #     for k, v in all_activities.items():
-        #         if session['bucketlist_id'] == v['bucketlist_id']:
-
-        #             print ('Show Bucket activities - ', all_activities)
-
-        #             # return redirect(url_for("show_activity", form=form, data=all_activities, bucketlist_id=bucketlist_id))
-        #             return redirect(url_for("show_activities", form=form, data=all_activities, bucketlist_id=bucketlist_id))
-
-        # if form.errors:
-        #     form_error = Markup("<div class='alert alert-danger' role='alert'>\
-        #                             Form error. Could not create bucketlist activity *#*#*??\
-        #                         </div>")
-        #     flash(form_error)
-
-        # Check if buck has activities
-        all_activities = Activity.activities
-        print ('Buck activities - ', all_activities)
-        # buck_activities = {k:v for k, v in all_activities.items() if session['bucketlist_id']==v['bucketlist_id']}
-        for k, v in all_activities.items():
-                if session['bucketlist_id'] == v['bucketlist_id']:
-
-                    print ('Buck activities - ', all_activities)
-                    # print ('Show Bucket activities - ', created_activities)
-
-                    return redirect(url_for("show_activities", form=form, data=all_activities))
-
-        print ('All activities - ', all_activities)
-        print ('Show buck id session in activity - ', session['bucketlist_id'])
-        # print ('BUck activities - ', buck_activities)
-
-        # Show user has bucketlists  --> makes show bucks link in nav work
-        # if buck_activities:
-            
-        #     return render_template('show_activities.html', form=form, data=buck_activities)
-        
-        # If GET
-        return redirect(url_for("show_activities", form=form, bucketlist_id=bucketlist_id))
-
-    # If user is not logged in:
-    return login_required()
-
-@app.route('/add_activity/<int:bucketlist_id>', methods=['GET', 'POST'])
-def add_activity(bucketlist_id):
-    form = BucketlistForm()
+@app.route('/show_activities/create_activity/<int:bucketlist_id>', methods=['GET', 'POST'])
+def create_activity(bucketlist_id):
+    """
+    Creates and adds activities to a bucketlist
+    """
+    form = ActivityForm(request.form) 
     if form.validate_on_submit():
-        # Create the bucketlist
         new_activity = Activity(form.title.data, form.description.data, form.status.data)
-        new_activity.create_activity()
+        new_activity.create_activity(bucketlist_id)
 
         activity_created = Markup("<div class='alert alert-success' role='alert'>\
                                         Bucketlist activity created successfully\
                                     </div>")
         flash(activity_created)
         
-        # Select the activity belonging to the current bucket
-        all_activities = Activity.activities
+        # Select the activity belonging to the current bucket and pass it to show_activities
+        all_activities = Activity.activities.items()
         print ('All activities - ', all_activities)
-        # created_activities = {k:v for k, v in all_activities if session['bucketlist_id']==v['bucketlist_id']}
-        for k, v in all_activities.items():
-            if session['bucketlist_id'] == v['bucketlist_id']:
+        created_activities = {k:v for k, v in all_activities if bucketlist_id==v['bucketlist_id']}
+        
+        if created_activities:
 
-                print ('Show Bucket activities - ', all_activities)
-
-                # return redirect(url_for("show_activity", form=form, data=all_activities, bucketlist_id=bucketlist_id))
-                return redirect(url_for("show_activities", form=form, data=all_activities, bucketlist_id=bucketlist_id))
-            # Else
-            return redirect(url_for('show_activities', form=form, bucketlist_id=bucketlist_id))
+            return redirect(url_for("show_activities", form=form, data=all_activities, bucketlist_id=bucketlist_id))
+        
+        # Else if the activity was not created
+        return redirect(url_for('show_activities', form=form, bucketlist_id=bucketlist_id))
 
     if form.errors:
         form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -370,15 +268,13 @@ def add_activity(bucketlist_id):
         flash(form_error)
 
     # If GET
-    return redirect(url_for('show_activity', form=form))
+    return render_template('show_activities.html', form=form, bucketlist_id=bucketlist_id)
 
 @app.route('/delete_bucketlist', methods=['GET', 'POST'])
 def delete_bucketlist():
     if logged_in: 
-        # Retrieve a user's bucketlist using it's ID
         bucketlists_dict = Bucketlist.bucketlists.items()
         user_bucketlists = {k:v for k, v in bucketlists_dict if session['user_id']==v['user_id']}
-        # bucketlist = {k:v for k, v in user_bucketlists.items() if int(request.form['k'])==k}
 
         print ('All bucketlists - ', bucketlists_dict)
         # print ('User bucketlists - ', user_bucketlists)
@@ -389,20 +285,22 @@ def delete_bucketlist():
 
         return redirect(url_for("show_bucketlists", data=user_bucketlists))
 
-@app.route('/delete_activity', methods=['GET', 'POST'])
-def delete_activity():
+@app.route('/show_activities/delete_activity/<int:bucketlist_id>/<int:key>', methods=['GET', 'POST'])
+def delete_activity(bucketlist_id, key):
     if logged_in:
-        activity_dict = Activity.activities.items()
-        # user_activities = {k:v for k, v in activity_dict if session['user_id']==v['user_id']}
-        buck_activities = {k:v for k, v in activity_dict if session['bucketlist_id']==v['bucketlist_id']}
+        all_activities = Activity.activities
+        print ('All activities - ', all_activities)
+        print('Bbuck id', bucketlist_id)
+        print('key', key)
+        buck_activities = {k:v for k, v in all_activities.items() if bucketlist_id==v['bucketlist_id']}
+        if buck_activities:
+            Activity.delete_activity(bucketlist_id, key)
 
-        print ('Existing activities in lst - ', activity_dict)
-
-        print('Passed form activity key', int(request.form['key']))
-
-        Activity.delete_activity()
-
-        return redirect(url_for("show_activities", data=buck_activities))        
+            return redirect(url_for("show_activities", form=ActivityForm(), bucketlist_id=bucketlist_id, data=buck_activities))
+        # If buck not found
+        print('Ids don;t match')
+        return render_template("show_activities.html", form=ActivityForm(), bucketlist_id=bucketlist_id, data=buck_activities)
+                
 
 @app.route('/edit_bucketlist', methods=['GET', 'POST'])
 def edit_bucketlist():
