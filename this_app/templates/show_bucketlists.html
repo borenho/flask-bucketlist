@@ -7,7 +7,7 @@
         <nav>
             <ul class="nav nav-pills pull-right">
                 <li role="presentation"><a href="/">Home</a></li>
-                <li role="presentation"><a href="/dashboard_bucketlists">Bucketlists</a></li>
+                <li role="presentation"><a href="/show_bucketlists">Bucketlists</a></li>
                 <li role="presentation"><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -29,23 +29,24 @@
                             <th>Title</th>
                             <th>Description</th>
                             <th>Actions</th>
+                            <th>Add</th>
                             <th>View</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for k, e in data.items() %}
                                 <tr>
-                                    <td>{{ e['name'] }}</td>
+                                    <td>{{ e['name'] }}, Key = {{ k }}</td>
                                     <td>{{ e['description'] }}</td>
                                     <td>
 
                                         <!-- Edit Modal -->
                                         <a href="#">
-                                            <span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#edit-modal"></span>
+                                            <span class="glyphicon glyphicon-edit" data-toggle="modal" data-target="#{{ k }}edit-modal"></span>
                                         </a>&emsp;
 
                                         <!-- Edit Modal Code -->
-                                        <div class="modal fade" id="edit-modal" role="dialog">
+                                        <div class="modal fade" id="{{ k }}edit-modal" role="dialog">
                                             <div class="modal-dialog">
                                             
                                                 <!-- Modal content-->
@@ -88,12 +89,12 @@
                                         </div>
 
                                         <!-- Delete Modal -->
-                                        <a href="#">
-                                            <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#delete-modal"></span>
-                                        </a>
+                                         <a href="#"> 
+                                            <span class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#{{ k }}delete-modal"></span>
+                                         </a> 
 
                                         <!-- Delete Modal Code -->
-                                        <div class="modal fade" id="delete-modal" role="dialog">
+                                        <div class="modal fade" id="{{ k }}delete-modal" role="dialog">
                                             <div class="modal-dialog">
                                             
                                                 <!-- Modal content-->
@@ -107,16 +108,21 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form action="{{ url_for('delete_bucketlist') }}" method="POST">  <!-- K is The Bucketlist key, = bucketlist ID  -->
-                                                            <input type="hidden" name="key" value="{{ k }}"/> 
+                                                              <input type="hidden" name="key" value="{{ k }}"/>   
                                                             <Input type="submit" class="btn btn-default" value="Delete"/>
-                                                        </form>
+                                                         </form> 
                                                     </div>
                                                 </div>
                                             
                                             </div>
                                         </div>
                                     </td>
-                                    <td><a href="{{ url_for('dashboard_activities') }}">Add Items</a></td>       
+                                    <td> 
+                                        <a href="{{ url_for('show_activities') }}">Add items</a>
+                                    </td>
+                                    <td> 
+                                        <a href="{{ url_for('show_activities') }}">Show items</a>
+                                    </td>
                                 </tr>
                         {% endfor %}
                     </tbody>
