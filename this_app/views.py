@@ -40,14 +40,11 @@ def signup():
             for key, value in users_dict:     # gets id, eg 2
                 if form.email.data in value['email']:
                     session['user_id'] = key
-                    print ('User signup session ID - ', session['user_id'])
 
             successful_signup = Markup("<div class='alert alert-success' role='alert'>\
                                             Account created successfully\
                                         </div>")
             flash(successful_signup)
-
-            print('All users - ', User.users)
 
             return redirect(url_for("login", form=LoginForm()))
 
@@ -131,6 +128,7 @@ def login():
         flash(form_error)
 
     # If GET
+    logged_in = False
     return render_template("login.html", form=form)
 
 @app.route('/show_bucketlists', methods=['GET', 'POST'])
@@ -148,9 +146,6 @@ def show_bucketlists():
 
             bucketlist_dict = Bucketlist.bucketlists.items()
             user_bucketlists = {k:v for k, v in bucketlist_dict if session['user_id']==v['user_id']}
-
-            print ('Existing bucks in lst - ', Bucketlist.bucketlists)
-            print ('Users bucks - ', user_bucketlists)
 
             return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
 
@@ -242,9 +237,6 @@ def delete_bucketlist():
 def delete_activity(bucketlist_id, key):
     if logged_in:
         all_activities = Activity.activities
-        print ('All activities - ', all_activities)
-        print('Bbuck id', bucketlist_id)
-        print('key', key)
         buck_activities = {k:v for k, v in all_activities.items() if bucketlist_id==v['bucketlist_id']}
         if buck_activities:
             Activity.delete_activity(bucketlist_id, key)
@@ -285,7 +277,6 @@ def edit_activity(bucketlist_id, key):
         form = ActivityForm(request.form)
 
         all_activities = Activity.activities.items()
-        buck_activites = {k:v for k, v in all_activities if k == key}
 
         if form.validate_on_submit():
             new_activity = Activity(form.title.data, form.description.data, form.status.data)
@@ -308,7 +299,6 @@ def logout():
     global logged_in
     logged_in = False
     session.pop('user_id', None)
-    session.pop('bucketlist_id', None)
 
     return redirect(url_for('index')) 
 
