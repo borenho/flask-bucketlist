@@ -12,14 +12,6 @@
             {% for message in get_flashed_messages() %}
                 {{ message }}
             {% endfor %}
-
-            <div class="social-links">
-                <a href="#" class="btn btn-primary disabled">Sign Up with Google</a>
-                <a href="#" class="btn btn-primary disabled">Sign Up with Twitter</a>
-            </div>
-
-            <p><h4>Or</h4></p>
-
             <form action="/signup" method="POST">
             {{ form.csrf_token }}
             {{ form.hidden }}
