@@ -9,6 +9,6 @@ install: 'pip install -r requirements.txt'
 
 
 # Run tests
-script: nosetests tests/bucktest.py
+script: nosetests
 
 after_success: coveralls
