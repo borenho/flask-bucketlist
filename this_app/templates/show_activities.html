@@ -16,17 +16,11 @@
             <h2>Your bucketlist in detail</h2></br>
             
             <!-- Display error/success/info messages here -->
-            <!-- <div class="error-msg-width"> -->
                 {% for message in get_flashed_messages() %}
                     {{ message }}
                 {% endfor %}
-            <!-- </div> -->
 
             {% if data %}
-                {% for key, value in data.items() %}
-                    <!-- <h4>Bucketlist {{ key }}: {{ value|count }} items</h4> -->
-                {% endfor %}
-            
                 <table class="table">
                     <thead>
                         <tr>

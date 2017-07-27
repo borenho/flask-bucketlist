@@ -16,10 +16,9 @@ def index():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     global logged_in
-    if logged_in:    # == True
+    if logged_in:
         return logout_required()
     else:
-        # If user is not signed in
         form = SignupForm(request.form)
 
         if form.validate_on_submit(): 
@@ -42,8 +41,6 @@ def signup():
                 if form.email.data in value['email']:
                     session['user_id'] = key
                     print ('User signup session ID - ', session['user_id'])
-
-            # logged_in = True
 
             successful_signup = Markup("<div class='alert alert-success' role='alert'>\
                                             Account created successfully\
@@ -78,27 +75,19 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     global logged_in
-    if logged_in:    # == True
+    if logged_in:
         return logout_required()
     
-    # Else if user not logged in
+    # If user is not logged in
     form = LoginForm(request.form)
 
     if form.validate_on_submit():
-        # Iterate over each user's stored data
-        users_dict = User.users.items()    # Eg {{1: {'password': 'kaka', 'username': 'kaka', 'email': 'kaka@email.com'}}}
+        users_dict = User.users.items()
         existing_user = {k:v for k, v in users_dict if form.email.data in v['email']}
-        # Check password if user exists
         if existing_user:
-            # Check if the stored password and form password match
             valid_user = [v for v in existing_user.values() if check_password_hash(v['password'], form.password.data)]
             if valid_user:  
-                # Log the user in as credentials are valid
                 logged_in = True
-
-                print (existing_user)
-                print ("---------------")
-                print (valid_user)
 
                 successful_login = Markup("<div class='alert alert-success' role='alert'>\
                                                 Login successful\
@@ -108,18 +97,15 @@ def login():
                 for key, value in users_dict:
                     if form.email.data in value['email']:
                         session['user_id'] = key
-                        print ('Login session - ', session['user_id'])
 
                         bucketlist_dict = Bucketlist.bucketlists.items()
                         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
-                        print ('Login bucks - ', has_bucks)
     
                         # If this user has bucketlists
                         if has_bucks:
                             return render_template('show_bucketlists.html', form=BucketlistForm(), data=has_bucks)
 
                         # If user has no bucketlists
-                        print ('This user has no bucks')
                         return redirect(url_for('show_bucketlists', form=BucketlistForm()))
             # If wrong password
             incorrect_password = Markup("<div class='alert alert-danger' role='alert'>\
@@ -136,7 +122,6 @@ def login():
         flash(not_registered)
 
         alt_form = SignupForm()
-        # return render_template("signup.html", form=form)
         return redirect(url_for('signup', form=alt_form ))
 
     if form.errors:
@@ -152,7 +137,6 @@ def login():
 def show_bucketlists():
     if logged_in:
         form = BucketlistForm(request.form)
-        # If user has no bucketlists
         if form.validate_on_submit():
             new_bucketlist = Bucketlist(form.name.data, form.description.data)
             new_bucketlist.create_bucketlist()
@@ -168,11 +152,6 @@ def show_bucketlists():
             print ('Existing bucks in lst - ', Bucketlist.bucketlists)
             print ('Users bucks - ', user_bucketlists)
 
-            # for item in user_bucketlists:
-            #     session['bucketlist_id'] = item    # item here returns the key, which is the bucketslist id
-
-            #     print ('session Buck id - ', session['bucketlist_id'])
-
             return render_template("show_bucketlists.html", form=form, data=user_bucketlists)
 
         if form.errors:
@@ -181,27 +160,11 @@ def show_bucketlists():
                                 </div>")
             flash(form_error)
 
-        print ('Session user id - ', session['user_id'])
-
-        if session.get('bucketlist_id'):
-            del session['bucketlist_id']
-        
-
         bucketlist_dict = Bucketlist.bucketlists.items()
         # Check if user has bucketlists
         has_bucks = {k:v for k, v in bucketlist_dict if session['user_id'] in v.values()}
 
-        print ('Show bucks - ', has_bucks)
-
         if has_bucks:
-            # if session['bucketlist_id']:
-            #     del session['bucketlist_id']
-
-            #     all_bucketlists = Bucketlist.bucketlists
-            #     # SEt a new key each time the show bucks page loads
-            #     for key in all_bucketlists:
-            #         session['bucketlist_id'] = key
-            #         print ('Session buck id - ', session['bucketlist_id'])
 
             return render_template('show_bucketlists.html', form=form, data=has_bucks)
 
@@ -221,14 +184,11 @@ def show_activities(bucketlist_id):
 
         # Check if buck has activities
         all_activities = Activity.activities
-        print ('All activities - ', all_activities)
-        print('buck id', bucketlist_id)
         buck_activities = {k:v for k, v in all_activities.items() if bucketlist_id==v['bucketlist_id']}
         if buck_activities:
             return render_template("show_activities.html", form=form, bucketlist_id=bucketlist_id, data=buck_activities)
 
         # If buck ids do not match
-        print('Buck IDs  mismatch')
         return render_template('show_activities.html', form=form, bucketlist_id=bucketlist_id)
 
     # If user is not logged in:
@@ -251,7 +211,6 @@ def create_activity(bucketlist_id):
         
         # Select the activity belonging to the current bucket and pass it to show_activities
         all_activities = Activity.activities.items()
-        print ('All activities - ', all_activities)
         created_activities = {k:v for k, v in all_activities if bucketlist_id==v['bucketlist_id']}
         
         if created_activities:
@@ -275,12 +234,6 @@ def delete_bucketlist():
     if logged_in: 
         bucketlists_dict = Bucketlist.bucketlists.items()
         user_bucketlists = {k:v for k, v in bucketlists_dict if session['user_id']==v['user_id']}
-
-        print ('All bucketlists - ', bucketlists_dict)
-        # print ('User bucketlists - ', user_bucketlists)
-
-        print('Passed form key', int(request.form['key']))
-
         Bucketlist.delete_bucketlist()
 
         return redirect(url_for("show_bucketlists", data=user_bucketlists))
@@ -298,7 +251,6 @@ def delete_activity(bucketlist_id, key):
 
             return redirect(url_for("show_activities", form=ActivityForm(), bucketlist_id=bucketlist_id, data=buck_activities))
         # If buck not found
-        print('Ids don;t match')
         return render_template("show_activities.html", form=ActivityForm(), bucketlist_id=bucketlist_id, data=buck_activities)
                 
 
@@ -307,24 +259,14 @@ def edit_bucketlist():
     if logged_in:
         form = BucketlistForm(request.form)
 
-        # Retrieve a user's bucketlist using it's ID
         bucketlists_dict = Bucketlist.bucketlists.items()
         user_bucketlists = {k:v for k, v in bucketlists_dict if session['user_id']==v['user_id']}
         bucketlist = {k:v for k, v in user_bucketlists.items() if k==int(request.form['key'])}
 
-        print ('All bucketlists - ', bucketlists_dict)
-        print ('User bucketlists - ', user_bucketlists)
-        # print ('Selected bucketlist - ', bucketlist)
-        print('Form key', int(request.form['key']))
-        
         if form.validate_on_submit():
             bucketlist = Bucketlist(form.name.data, form.description.data)
 
-            print ('Existing bucks in edit - ', Bucketlist.bucketlists)
-
             bucketlist.edit_bucketlist()
-
-            print('All bucketslists =', user_bucketlists)
 
             return redirect(url_for("show_bucketlists", data=user_bucketlists))
 
@@ -345,18 +287,10 @@ def edit_activity(bucketlist_id, key):
         all_activities = Activity.activities.items()
         buck_activites = {k:v for k, v in all_activities if k == key}
 
-        print ('All activities - ', all_activities)
-        print('Buck activities', buck_activites)
-
         if form.validate_on_submit():
-            print('passing2')
             new_activity = Activity(form.title.data, form.description.data, form.status.data)
 
-            print ('Existing activites on edit - ', all_activities)
-
             new_activity.edit_activity(bucketlist_id, key)
-
-            print ('Activity should be diff - ',all_activities)
 
             return redirect(url_for("show_activities", form=form, bucketlist_id=bucketlist_id, data=all_activities))
 
@@ -394,32 +328,3 @@ def logout_required():
     flash(logout_instead)
 
     return redirect(url_for("show_bucketlists", form=BucketlistForm()))
-
-
-    form = ActivityForm(request.form)
-    # Select the activity belonging to the current bucket and set a session to it
-    activity_dict = Activity.activities.items()
-    created_activities = {k:v for k, v in activity_dict if session['bucketlist_id']==v['bucketlist_id']}
-
-    print ('Existing activities - ', Activity.activities)
-    print ('Show Bucket activities - ', created_activities)
-
-    # Assign each activity a session if bucket has more than one activity
-    activity = 0
-    if len(created_activities) > 1:
-        
-        for i in range(len(created_activities)+1):
-            activity_id += 1
-            for item in created_activities:
-                session[activity_id] = item
-
-                print ('Recurring Buck id - ', session[activity_id])
-
-                return render_template("show_activities.html", form=form, data=created_activities)
-
-    # Else if bucket only contains a single activity
-    for item in created_activities:
-        session['activity_id'] = item
-        print ('Session activity id - ', session['activity_id'])
-
-        return render_template("show_activities.html", form=form, data=created_activities)
