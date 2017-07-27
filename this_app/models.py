@@ -130,22 +130,20 @@ class Activity(object):
         
         return self.activities
 
-    def edit_activity(self):
+    def edit_activity(self, bucketlist_id, key):
         """
         Class to edit activities
         """
         all_activities = Activity.activities
-        for key, value in all_activities.items():
-            if session['bucketlist_id'] == key and session['user_id'] == value['user_id']:
-                for k, val in all_activities.items():
-                    if k == int(request.form['key']):
-                        print('To be edited =', all_activities[key])
-                        parent_bucketlist = val['bucketlist_id']
-                        all_activities[key] = {'bucketlist_id': parent_bucketlist, 'name': self.title, 'description': self.description, 'status': self.status}
+        for k, val in all_activities.items():
+            if k == key and val['bucketlist_id'] == bucketlist_id:
+                print('To be edited =', all_activities[k])
+                parent_bucketlist = val['bucketlist_id']
+                all_activities[k] = {'bucketlist_id': parent_bucketlist, 'title': self.title, 'description': self.description, 'status': self.status}
 
-                        print('Should have been edited =', all_activities)
+                print('Should have been edited =', all_activities)
 
-                        return all_activities
+                return all_activities
 
     @staticmethod
     def get_all():

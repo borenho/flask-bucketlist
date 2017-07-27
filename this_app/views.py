@@ -337,30 +337,28 @@ def edit_bucketlist():
         # If GET
         return redirect(url_for("show_bucketlists", form=form))
 
-@app.route('/edit_activity', methods=['GET', 'POST'])
-def edit_activity():
+@app.route('/show_activities/edit_activity/<int:bucketlist_id>/<int:key>', methods=['GET', 'POST'])
+def edit_activity(bucketlist_id, key):
     if logged_in:
         form = ActivityForm(request.form)
 
         all_activities = Activity.activities.items()
-        user_activities = {k:v for k, v in all_activities if session['bucketlist_id']==v['bucketlist_id']}
-        buck_activites = {k:v for k, v in user_activities.items() if k==int(request.form['key'])}
+        buck_activites = {k:v for k, v in all_activities if k == key}
 
         print ('All activities - ', all_activities)
-        print ('User bucketlists - ', user_activities)
-        # print ('Selected bucketlist - ', bucketlist)
-        print('Activity Form key', int(request.form['key']))
+        print('Buck activities', buck_activites)
 
         if form.validate_on_submit():
+            print('passing2')
             new_activity = Activity(form.title.data, form.description.data, form.status.data)
 
             print ('Existing activites on edit - ', all_activities)
 
-            new_activity.edit_activity()
+            new_activity.edit_activity(bucketlist_id, key)
 
             print ('Activity should be diff - ',all_activities)
 
-            return redirect(url_for("show_activities"))
+            return redirect(url_for("show_activities", form=form, bucketlist_id=bucketlist_id, data=all_activities))
 
         if form.errors:
             form_error = Markup("<div class='alert alert-danger' role='alert'>\
@@ -369,7 +367,7 @@ def edit_activity():
             flash(form_error)
 
         # If GET
-        return redirect(url_for("show_activities", form=form))
+        return redirect(url_for("show_activities", form=form, bucketlist_id=bucketlist_id, data=all_activities))
 
 @app.route('/logout')
 def logout():
