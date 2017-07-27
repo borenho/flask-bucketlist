@@ -27,4 +27,4 @@ class ActivityForm(FlaskForm):
     """Form to CRUd a bucketlist item"""
     title = StringField("Title", validators=[DataRequired()])
     description = TextField("Description", validators=[DataRequired()])
-    status = BooleanField("Status")
+    status = BooleanField("Status", default=True)
