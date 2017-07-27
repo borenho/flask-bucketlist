@@ -83,7 +83,8 @@ def login():
         existing_user = {k:v for k, v in users_dict if form.email.data in v['email']}
         if existing_user:
             valid_user = [v for v in existing_user.values() if check_password_hash(v['password'], form.password.data)]
-            if valid_user:  
+            if valid_user:
+                global logged_in
                 logged_in = True
 
                 successful_login = Markup("<div class='alert alert-success' role='alert'>\
