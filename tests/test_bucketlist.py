@@ -27,14 +27,32 @@ class UserTestCase(unittest.TestCase):
         """ Setup a new user """
         User.users = {}
         self.app = User('leo@email.com', 'leo', 'pwd')
-        # Initialize the test client
-        self.client = app.test_client(self)
         # Set some default user data
         self.user_data = {
-            'email': 'leo@email.com',
-            'username': 'leo',
-            'password': 'pwd'
+            1: {
+                'email': 'leo@email.com',
+                'username': 'leo',
+                'password': 'pwd'  
+            }
+            
         }
+
+    def test_users_dictionary(self):
+        """Test user's dict is empty at first"""
+        new_user = self.app
+        self.assertEqual(len(new_user.users), 0)
+        new_user.create_user()
+        self.assertIsInstance(new_user, User)
+        self.assertEqual(len(new_user.users), 1)
+
+    def test_user_id(self):
+        """Test user_id starts from one and increments by one"""
+        new_user = self.app
+        self.assertTrue(new_user.user_id, 0)
+        new_user.create_user()
+        self.assertTrue(new_user.user_id, 1)
+        for key in new_user.users:
+            self.assertEqual(new_user.user_id, key)
 
     def test_users_can_signup(self):
         """Test new user can sign up successfully"""
@@ -46,12 +64,13 @@ class UserTestCase(unittest.TestCase):
                 }}
             self.assertEqual(expected, result)
 
-    # def test_already_registered_user(self):
-    #     """Test that a user cannot be registered twice."""
-    #     res = self.client.post('signup', data=self.user_data)
-    #     self.assertEqual(res.status_code, 200)
-    #     second_res = self.client.post('signup', data=self.user_data)
-    #     self.assertEqual(second_res.status_code, 202)
+    def test_registering_user(self):
+        """Test that a user cannot be registered twice."""
+        new_user = self.app
+        new_user.create_user()
+        client = app.test_client(self)
+        response = client.post('/login', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
 
     def test_successful_login(self):
         """Test registered user can login successfully"""
@@ -65,6 +84,7 @@ class UserTestCase(unittest.TestCase):
                                       password='pwc'),
                             follow_redirects=True)
         self.assertEqual(response.status_code, 200)
+
 
     def test_signup_existing_user_redirects_to_login(self):
         """Users get redirected to login if they have a/c"""
@@ -99,55 +119,115 @@ class BucketlistTestCase(unittest.TestCase):
     def setUp(self):
         """ Setup a bucketlist """
         User.users = {1: {'leo@email.com', 'leo', 'pwd'}}
-        self.bucketlist = Bucketlist('Hiking', 'Go for hiking')
+        self.app = Bucketlist('Hiking', 'Go for hiking')
+        Bucketlist.bucketlists = {}
+        self.client = app.test_client(self)
+        # Set some default bucketlist data
+        self.bucketlist_data = {
+            1: {
+                'user_id': 1,
+                'name': 'Hiking',
+                'description': 'Go for hiking'
+            }
+            
+        }
+
+    def test_bucketlists_dictionary(self):
+        """Test bucketlist's dict is empty at first"""
+        new_bucketlist = self.app
+        self.assertEqual(len(new_bucketlist.bucketlists), 0)
+        new_bucketlist.create_bucketlist()
+        self.assertIsInstance(new_bucketlist, Bucketlist)
+        self.assertEqual(len(new_bucketlist.bucketlists), 1)
+
+    def test_bucketlist_id(self):
+        """Test bucketlist_id starts from one and increments by one"""
+        new_bucketlist = self.app
+        self.assertTrue(new_bucketlist.buck_id, 0)
+        new_bucketlist.create_bucketlist()
+        self.assertTrue(new_bucketlist.buck_id, 1)
+        for key in new_bucketlist.bucketlists:
+            self.assertEqual(new_bucketlist.buck_id, key)
+
+    def test_create_bucketlist(self):
+        """Test bucketlist can be created"""
+        new_bucketlist = self.app
+        new_bucketlist.create_bucketlist()
+        self.assertEqual(len(new_bucketlist.bucketlists), 1)
+
+    def test_user_id_in_bucketlist(self):
+        """User id starts from one onwards"""
+        new_bucketlist = self.app
+        new_bucketlist.create_bucketlist()
+        for value in Bucketlist.bucketlists.values():
+            for key in User.users:
+                self.assertEqual(value['user_id']+1, key)
+        new_bucketlist.create_bucketlist()
+        for value in Bucketlist.bucketlists.values():
+            for key in User.users:
+                self.assertEqual(value['user_id']+1, key)
+
+    def test_create_bucketlist_without_user_fails(self):
+        """Test bucketlist creation without a user fails"""
+        User.users = {}
+        result = self.app.create_bucketlist()
+        expected = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
+        self.assertNotEqual(expected, result)
+
+    def test_successful_bucketlist_creation(self):
+        """Test bucketlist creation is successful"""
+        result = self.app.create_bucketlist()
+        expected = {5: {'user_id': 0, 'name': 'Hiking', 'description': 'Go for hiking'}}
+        self.assertEqual(expected, result)
 
     def tearDown(self):
-        del self.bucketlist 
+        del self.app
+        del self.bucketlist_data
+        del Bucketlist.bucketlists
         del User.users
-    
-    # def test_update_bucketlist(self):
-    #     """ Users can update bucketlists """
-    #     self.bucketlist.bucketlists = {}
-    #     self.bucketlist.create_bucketlist()
-    #     former = self.bucketlist
-    #     self.bucketlist.edit_bucketlist()
-    #     latter = self.bucketlist
-    #     self.assertNotEqual(former, latter)
-
-    # def test_create_bucketlist_without_user_fails(self):
-    #     """Test bucketlist creation without a user fails"""
-    #     User.users = {}
-    #     result = self.bucketlist.create_bucketlist()
-    #     expected = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
-    #     self.assertNotEqual(expected, result)
-
-    # def test_successful_bucketlist_creation(self):
-    #     """Test bucketlist creation is successful"""
-    #     result = self.bucketlist.create_bucketlist()
-    #     expected = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
-    #     self.assertEqual(expected, result)
 
 
 class ActivityTestCase(unittest.TestCase):
     """ Test the BucketlistItem class """
 
     def setUp(self):
-        """ Setup a bucketlist """
+        """ Setup an activity """
         User.users = {1: {'leo@email.com', 'leo', 'pwd'}}
         Bucketlist.bucketlists = {1: {'user_id': 1, 'name': 'Hiking', 'description': 'Go for hiking'}}
         Activity.activities = {}
-        self.activity = Activity('Hiking', 'Go for hiking', True)
+        self.app = Activity('Hiking', 'Go for hiking', True)
+        # Set some default activity data
+        self.activity_data = {
+            1: {
+                'bucketlist_id': 1,
+                'name': 'Hiking',
+                'description': 'Go for hiking',
+                'status': True
+            }   
+        }
 
-    def tearDown(self):
-        del self.activity
-        del Bucketlist.bucketlists
-        del User.users
+    def test_activity_dictionary(self):
+        """Test activity's dict is empty at first"""
+        new_activity = self.app
+        self.assertEqual(len(new_activity.activities), 0)
+        new_activity.create_activity(1)
+        self.assertIsInstance(new_activity, Activity)
+        self.assertEqual(len(new_activity.activities), 1)
 
-    # def test_successful_activity_creation(self):
-    #     """Test bucketlist item creation is successful"""
-    #     result = self.activity.create_activity()
-    #     expected = {3: {'bucketlist_id': 0, 'title': 'Hiking', 'description': 'Go for hiking', 'status': True}}
-    #     self.assertEqual(expected, result)
+    def test_activity_id(self):
+        """Test activity_id starts from one and increments by one"""
+        new_activity = self.app
+        self.assertTrue(Activity.activity_id, 0)
+        new_activity.create_activity(1)
+        self.assertTrue(new_activity.activity_id, 1)
+        for key in new_activity.activities:
+            self.assertEqual(new_activity.activity_id, key)
+
+    def test_successful_activity_creation(self):
+        """Test bucketlist item creation is successful"""
+        result = self.app.create_activity(1)
+        expected = {4: {'bucketlist_id': 1, 'title': 'Hiking', 'description': 'Go for hiking', 'status': True}}
+        self.assertEqual(expected, result)
 
     def test_show_activities_without_login_redirects(self):
         """Users need valid credentials"""
@@ -156,9 +236,9 @@ class ActivityTestCase(unittest.TestCase):
         response = tester.post('/show_bucketlists', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-    # def test_activities_dashboard_without_login_redirects(self):
-    #     """Users need valid credentials"""
-    #     User.users = {}
-    #     tester = app.test_client(self)
-    #     response = tester.get('/show_activities', follow_redirects=True)
-    #     self.assertEqual(response.status_code, 200)
+    def tearDown(self):
+        del self.app
+        del self.activity_data
+        del Activity.activities
+        del Bucketlist.bucketlists
+        del User.users
