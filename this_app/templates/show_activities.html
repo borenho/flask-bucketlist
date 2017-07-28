@@ -242,5 +242,11 @@
         </div>
     </div>
 </div>
+<script>
+    $('#add-activity-modal').on('hidden.bs.modal', function (e) {
+    $(this).find("input, textarea").val('').end()
+           .find("input[type=checkbox]").prop("checked", "").end();
+    })
+</script>
 
 {% endblock %}

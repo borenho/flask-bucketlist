@@ -33,7 +33,7 @@ class User(object):
 class Bucketlist(object):
     """Represents a class to Create, Read, Update & Delete a bucketlist"""
 
-    buck_id = 0 
+    buck_id = 0
     bucketlists = {}
 
     def __init__(self, name, description):
@@ -66,8 +66,6 @@ class Bucketlist(object):
                         print('To be edited =', bucketlists_dict[key])
                         existing_owner = val['user_id']
                         bucketlists_dict[key] = {'user_id': existing_owner, 'name': self.name, 'description': self.description}
-
-                        print('Should have been edited =', bucketlists_dict)
 
                         return bucketlists_dict
 

@@ -1,6 +1,5 @@
 # The Flask Bucketlist App
-[![Build Status](https://travis-ci.org/borenho/flask-bucketlist.svg?branch=challenge-1)](https://travis-ci.org/borenho/flask-bucketlist)\
-[![Coverage Status](https://coveralls.io/repos/github/borenho/flask-bucketlist/badge.svg?branch=master)](https://coveralls.io/github/borenho/flask-bucketlist?branch=master)
+[![Build Status](https://travis-ci.org/borenho/flask-bucketlist.svg?branch=master)](https://travis-ci.org/borenho/flask-bucketlist) [![Coverage Status](https://coveralls.io/repos/github/borenho/flask-bucketlist/badge.svg?branch=master)](https://coveralls.io/github/borenho/flask-bucketlist?branch=master)
 
 A simple Python Flask bucket-list application that allows users to keep track of the things they want to achieve and experience before reaching a certain age, and to share the fun with others along the way.
 

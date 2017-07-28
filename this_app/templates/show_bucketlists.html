@@ -212,10 +212,16 @@
                     
                     </div>
                 </div>
+                
             {% endif %}
-            
         </div>
     </div>
 </div>
+<script>
+    // $('#myModal form :input-1').val("");
+        $('#add-bucketlist-modal').on('hidden.bs.modal', function (e) {
+            $(this).find("input, textarea").val('').end()
+        })
+</script>
 
 {% endblock %}
