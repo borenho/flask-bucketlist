@@ -1,11 +1,17 @@
 body {
 	/* background: linear-gradient(to bottom right, #003366 0%, #cc66ff 100%); */
 	background: url('bnb_books_budapest.jpg');
-	/* background-size: cover; */
   	min-height: 100vh;
 }
 
+.homepage-img {
+	background: url('bg1.jpg') no-repeat;
+	background-size: cover; 
+	min-height: 100vh;
+}
+
 .get-started {
+	 background: rgba(0, 0, 0, 0.1); 
     text-align: center;
     margin: 200px;
     color: white;
