@@ -19,6 +19,12 @@ class BasicTestCase(unittest.TestCase):
         response = tester.get('/logout', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
+    def test_login_to_bucketlists(self):
+        """ Ensure signup redirects to login """
+        tester = app.test_client(self)
+        response = tester.post('/login', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
 
 class UserTestCase(unittest.TestCase):
     """ Test the User class """

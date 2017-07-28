@@ -54,7 +54,7 @@ The app follows TDD (Test Driven Develoment) principles and the tests are in the
 
 Navigate to that dir and run the tests with the following command:
 
-`pytest bucketlist.py`
+`nosetests`
 
 # Authors
 Bore Collins
